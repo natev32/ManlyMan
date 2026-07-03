@@ -471,6 +471,51 @@ input,textarea,select,[contenteditable]{caret-color:#111}
 .tier-row .tname{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#2f6fb0}
 #auctbl tbody tr.tier-row:hover td{background:linear-gradient(to right,#e9f1fb,#f7fbff)!important}
 .tier-row td:first-child{box-shadow:none!important}
+
+.auc-exp>td{background:#eff6ff;border-bottom:2px solid var(--line2);padding:10px 12px}
+.auc-exp:hover>td{background:#eff6ff!important}
+.expbox{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.exp-vals{display:flex;flex-wrap:wrap;gap:7px 14px}
+.exp-vals .ev{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums;font-weight:700}
+.exp-vals .ev i{font-style:normal;font-size:9px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);margin-right:4px;font-weight:800}
+.exp-vals .ev.amber{color:#b7791f}
+.exp-form{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-left:auto}
+.exp-form .ci{display:inline-flex;align-items:center;gap:2px;border:1px solid var(--line2);border-radius:7px;padding:3px 9px;background:#fff}
+.exp-form .ci input{width:66px;border:0;outline:0;font-size:14px;text-align:right;background:transparent}
+.exp-form select{padding:7px 9px;border:1px solid var(--line2);border-radius:7px;font-size:13px;max-width:160px;background:#fff}
+.exp-form .grade{font-weight:800;font-size:13px;border-radius:6px;padding:3px 8px}
+.exp-form .ok{background:#1f6fb0;color:#fff;border:0;border-radius:7px;padding:8px 15px;font-weight:800;cursor:pointer;font-size:13px}
+.exp-form .ok:hover{background:#18568a}
+.exp-form .no{background:#fff;border:1px solid var(--line2);border-radius:7px;padding:8px 12px;cursor:pointer;color:var(--ink-dim);font-size:13px}
+.addb.on{background:#1f6fb0;color:#fff;border-color:#1f6fb0}
+@media(max-width:700px){
+  #auctbl th:nth-child(2),#auctbl td:nth-child(2),
+  #auctbl th:nth-child(3),#auctbl td:nth-child(3),
+  #auctbl th:nth-child(4),#auctbl td:nth-child(4),
+  #auctbl th:nth-child(5),#auctbl td:nth-child(5),
+  #auctbl th:nth-child(8),#auctbl td:nth-child(8){display:none}
+  #v-auction .tbl-scroll{overflow-x:hidden}
+  #auctbl td.l{max-width:none}
+  .expbox{gap:12px}
+  .exp-form{margin-left:0;width:100%}
+  .exp-form .ci{flex:0 0 auto}
+  .exp-form .grade{flex:0 0 auto;align-self:center}
+  .exp-form select{flex:1 1 100%;max-width:none}
+  .exp-form .ok{flex:2 1 0}
+  .exp-form .no{flex:1 1 0}
+}
+
+/* prevent iOS Safari auto-zoom on input focus: 16px min font on touch devices */
+@media (pointer:coarse){input,textarea,select{font-size:16px!important}}
+
+/* League Rosters: fit on mobile, keep Player/Pos/Salary/Value/Keeper visible */
+@media(max-width:700px){
+  #board th:nth-child(3),#board td:nth-child(3),
+  #board th:nth-child(4),#board td:nth-child(4){display:none}
+  #board td.l{max-width:104px}
+  #board th,#board td{padding-left:6px;padding-right:6px}
+  #board .asset{min-width:30px;padding:2px 5px}
+}
 </style></head><body>
 <header>
   <div class="hwrap">
@@ -1048,24 +1093,24 @@ function renderAuction(){
     const _cls=((myTeam&&_needSet[m.pos])?'need ':'')+(watchSet.has(m.id)?'watch':'');
     let pre='';
     if(_tierOf&&_maxT>=1){var _t=_tierOf[m.id];if(_t!=null&&!_seenTier[_t]){_seenTier[_t]=1;pre=`<tr class="tier-row"><td colspan="9"><span class="tier-pill">Tier ${_t+1}</span><span class="tname">${_tierName[_t]||''}</span></td></tr>`;}}
-    let action;
+    let action=`<button class="addb ghost ${aEdit===m.id?'on':''}" data-draft="${m.id}">${aEdit===m.id?'Close':'Draft'}</button>`;
+    let expand='';
     if(aEdit===m.id){
-      action=`<div class="auc-edit"><div class="ci"><span>$</span><input id="ac-cost" type="number" step="0.25" min="0.25" value="${r25(Math.max(0.25,m.anchor*(INFLP[m.pos]||INFL)))}"/></div><span id="ac-grade" class="grade" style="color:#5b9bd5;border:1px solid #5b9bd555">B</span><select id="ac-team">${teamOpts}</select><button class="ok" data-confirm="${m.id}">\u2713</button><button class="no" data-cancel="1">\u2715</button></div>`;
-    }else{
-      action=`<button class="addb ghost" data-draft="${m.id}">Draft</button>`;
+      const _lv=fmt(Math.max(0.25,Math.round(m.anchor*(INFLP[m.pos]||INFL)*4)/4),2);
+      expand=`<tr class="auc-exp"><td colspan="9"><div class="expbox"><div class="exp-vals"><span class="ev"><i>Proj</i>${fmt(m.season)}</span><span class="ev"><i>PPG</i>${fmt(m.ppg,1)}</span><span class="ev"><i>VOR</i>${m.vor==null?'—':(m.vor>0?'+':'')+fmt(m.vor)}</span><span class="ev"><i>Value</i>$${fmt(m.anchor,2)}</span><span class="ev amber"><i>Live</i>$${_lv}</span><span class="ev"><i>Last</i>${m.lastSal!=null?('$'+fmt(m.lastSal,2)):'—'}</span></div><div class="exp-form"><span class="ci"><span>$</span><input id="ac-cost" type="number" step="0.25" min="0.25" value="${r25(Math.max(0.25,m.anchor*(INFLP[m.pos]||INFL)))}"/></span><span id="ac-grade" class="grade" style="color:#5b9bd5;border:1px solid #5b9bd555">B</span><select id="ac-team">${teamOpts}</select><button class="ok" data-confirm="${m.id}">Draft ✓</button><button class="no" data-cancel="1">Cancel</button></div></div></td></tr>`;
     }
     return pre+`<tr class="${_cls.trim()}">
       <td class="l"><span class="wstar ${watchSet.has(m.id)?'on':''}" data-watch="${m.id}">\u2605</span> <span class="pname pclick" data-pid="${m.id}">${m.name}</span> <span class="pmeta">${m.nfl||''}</span></td>
       <td>${m.availRank?`<span class="pos-tag ${m.pos}">${m.pos}${m.availRank}</span>`:`<span class="pos-tag ${m.pos}">${m.pos}</span>`}</td>
       <td class="proj">${fmt(m.season)}</td><td class="mono" style="color:var(--ink-dim)">${fmt(m.ppg,1)}</td>
       <td class="vor" style="color:${m.vor==null?'var(--ink-faint)':vorColor(m.vor,m.pos)}">${m.vor==null?'\u2014':(m.vor>0?'+':'')+fmt(m.vor)}</td>
-      <td class="anchor">$${fmt(m.anchor,2)}</td><td class="mono livecell" title="fair value adjusted by ${m.pos} market ${(INFLP[m.pos]||INFL).toFixed(2)}×">$${fmt(Math.max(0.25,Math.round(m.anchor*(INFLP[m.pos]||INFL)*4)/4),2)}</td><td class="mono" style="color:var(--ink-faint)" title="${m.lastTot!=null?('last yr: '+m.lastPPG+' ppg, '+m.lastTot+' pts'):'no last-yr data'}">${m.lastSal!=null?('$'+fmt(m.lastSal,2)):'\u2014'}</td><td>${action}</td></tr>`;}).join('');
+      <td class="anchor">$${fmt(m.anchor,2)}</td><td class="mono livecell" title="fair value adjusted by ${m.pos} market ${(INFLP[m.pos]||INFL).toFixed(2)}×">$${fmt(Math.max(0.25,Math.round(m.anchor*(INFLP[m.pos]||INFL)*4)/4),2)}</td><td class="mono" style="color:var(--ink-faint)" title="${m.lastTot!=null?('last yr: '+m.lastPPG+' ppg, '+m.lastTot+' pts'):'no last-yr data'}">${m.lastSal!=null?('$'+fmt(m.lastSal,2)):'\u2014'}</td><td>${action}</td></tr>`+expand;}).join('');
 }
 document.querySelectorAll('#v-auction .pos-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('#v-auction .pos-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');aPos=b.dataset.apos;if(aPos!=='ALL'){selPos=aPos;loadSliders();}aEdit=null;renderAuction();});
 $('#aq').oninput=e=>{aQuery=e.target.value;aEdit=null;renderAuction();};
 document.querySelectorAll('#auctbl thead th[data-as]').forEach(th=>th.onclick=()=>{const k=th.dataset.as;if(aSort===k)aDir*=-1;else{aSort=k;aDir=(k==='name')?1:-1;}aEdit=null;renderAuction();});
 $('#aucrows').addEventListener('click',e=>{
-  const d=e.target.closest('[data-draft]');if(d){aEdit=d.dataset.draft;aEditVal=Math.max(0.25,((mById[aEdit]||{}).anchor||0.25)*inflationRate());renderAuction();setTimeout(updAucGrade,0);return;}
+  const d=e.target.closest('[data-draft]');if(d){aEdit=(aEdit===d.dataset.draft)?null:d.dataset.draft;aEditVal=aEdit?Math.max(0.25,((mById[aEdit]||{}).anchor||0.25)*inflationRate()):0;renderAuction();setTimeout(updAucGrade,0);return;}
   const c=e.target.closest('[data-confirm]');if(c){const id=c.dataset.confirm;const cost=r25($('#ac-cost').value);const team=$('#ac-team').value;const _m=mById[id];draftLog.push({id,name:_m.name,pos:_m.pos,team,cost,prevTeam:_m.team,prevCost:_m.cost,action:'draft'});_m.team=team;_m.cost=cost;_m.contractYr=_m.contractYr||1;aEdit=null;renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();saveSession();return;}
   const x=e.target.closest('[data-cancel]');if(x){aEdit=null;renderAuction();}
 });
