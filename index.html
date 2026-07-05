@@ -516,6 +516,86 @@ input,textarea,select,[contenteditable]{caret-color:#111}
   #board th,#board td{padding-left:6px;padding-right:6px}
   #board .asset{min-width:30px;padding:2px 5px}
 }
+
+.trd-teams{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:start;margin:6px 0 12px}
+.trd-swap{align-self:center;font-size:22px;color:var(--ink-faint);padding-top:30px}
+.trd-side select{width:100%;margin-bottom:8px}
+.trd-scroll{max-height:300px;overflow:auto;border:1px solid var(--line2);border-radius:9px}
+.trd-row{display:flex;align-items:center;gap:8px;padding:6px 9px;border-bottom:1px solid #eef2f7;cursor:pointer;font-size:13px}
+.trd-row:last-child{border-bottom:0}
+.trd-row:hover{background:var(--panel2)}
+.trd-row.sel{background:#eef6ff}
+.trd-row input{margin:0;flex:none;width:16px;height:16px}
+.trd-nm{flex:1;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trd-ppg{color:var(--ink-dim);font-variant-numeric:tabular-nums;width:38px;text-align:right}
+.trd-as{font-weight:700;width:30px;text-align:right;font-variant-numeric:tabular-nums}
+.trd-sal{color:var(--ink-dim);width:52px;text-align:right;font-variant-numeric:tabular-nums}
+.trd-surp{width:58px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:12px}
+.trd-controls{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:4px 0 14px;padding:10px 12px;background:var(--panel2);border-radius:9px}
+.trd-emph{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink-dim)}
+.trd-emph input[type=range]{width:140px}
+.trd-emph #tr-emph-v{font-weight:800;color:var(--ink)}
+.trd-emphhint{font-weight:500;color:var(--ink-faint);font-size:11px}
+.trd-exec{margin-left:auto;background:#1f6fb0;color:#fff;border:0;border-radius:8px;padding:9px 18px;font-weight:800;font-size:13px;cursor:pointer}
+.trd-exec:hover{background:#18568a}
+.trd-exec:disabled{background:#c3d2e2;cursor:not-allowed}
+.trd-empty{color:var(--ink-faint);padding:16px;text-align:center;font-size:13px}
+.trd-summary{display:flex;flex-wrap:wrap;gap:6px 24px;font-size:12.5px;color:var(--ink-dim);margin-bottom:10px}
+.trd-summary b{color:var(--ink)}
+.trd-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.trd-card{border:1px solid var(--line2);border-radius:10px;padding:11px 13px;background:#fff}
+.trd-cardh{display:flex;justify-content:space-between;align-items:center;font-weight:800;color:var(--ink);font-size:14px;margin-bottom:9px;gap:8px}
+.trd-wn{font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#2f6fb0;background:#eaf2fb;border-radius:5px;padding:2px 7px;white-space:nowrap}
+.trd-metrics{display:grid;grid-template-columns:1fr 1fr;gap:9px 12px}
+.trd-m{display:flex;flex-direction:column;gap:1px}
+.trd-m i{font-style:normal;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint);font-weight:700}
+.trd-m b{font-size:16px;font-variant-numeric:tabular-nums}
+.trd-m b small{font-size:11px;color:var(--ink-faint);font-weight:600}
+.trd-m s{text-decoration:none;font-size:10.5px;color:var(--ink-dim);font-variant-numeric:tabular-nums}
+.trd-m b.pos{color:#0f7b3f}.trd-m b.neg{color:#c0392b}
+.trd-note{margin-top:9px;font-size:11.5px;font-weight:700;color:#b7791f;background:#b7791f12;border-radius:6px;padding:5px 8px}
+.trd-illegal{margin-top:9px;font-size:11.5px;font-weight:700;color:#c0392b;background:#c0392b12;border-radius:6px;padding:5px 8px}
+.trd-net{margin-top:10px;font-size:12.5px;font-weight:800;border-radius:7px;padding:6px 10px;text-align:center}
+.trd-net span{font-weight:600;opacity:.85}
+.trd-net.win{background:#0f7b3f14;color:#0f7b3f}
+.trd-net.lose{background:#c0392b12;color:#c0392b}
+.trd-net.fair{background:var(--panel2);color:var(--ink-dim)}
+.trd-verdict{font-size:13.5px;line-height:1.5;color:var(--ink);background:#f4f9ff;border:1px solid var(--line2);border-left:4px solid #2f6fb0;border-radius:8px;padding:11px 14px}
+.trd-verdict .good{color:#0f7b3f}.trd-verdict .bad{color:#c0392b}
+@media(max-width:700px){
+  .trd-teams{grid-template-columns:1fr;gap:8px}
+  .trd-swap{display:none}
+  .trd-cards{grid-template-columns:1fr}
+  .trd-exec{margin-left:0;width:100%}
+}
+
+.rec-controls{margin:4px 0 12px;padding:10px 12px;background:var(--panel2);border-radius:9px}
+.rec-var{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink-dim);flex-wrap:wrap}
+.rec-var input[type=range]{width:150px}
+.rec-var #rec-vol-v{font-weight:800;color:var(--ink)}
+.rec-varhint{font-weight:500;color:var(--ink-faint);font-size:11px}
+#rectbl{width:100%;border-collapse:collapse}
+#rectbl th,#rectbl td{padding:8px 10px;text-align:right;border-bottom:1px solid #eef2f7;font-size:13px;white-space:nowrap}
+#rectbl th.l,#rectbl td.l{text-align:left}
+#rectbl th{font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);font-weight:700;border-bottom:1px solid var(--line2)}
+#rectbl td.mono b{font-weight:800}
+.rec-row{cursor:pointer}
+.rec-row:hover{background:var(--panel2)}
+.rec-row.me{background:#eef6ff}
+.rec-row.me:hover{background:#e3f0ff}
+.rec-car{display:inline-block;width:14px;color:var(--ink-faint);font-size:10px}
+.rec-exp>td{padding:0!important;background:var(--panel2)}
+.rec-slate{display:grid;grid-template-columns:repeat(2,1fr);gap:1px 22px;padding:10px 14px}
+.rec-g{display:flex;align-items:center;gap:9px;font-size:12px;padding:3px 0;border-bottom:1px solid #e6edf5}
+.rec-wk{color:var(--ink-faint);font-weight:700;width:26px;flex:none}
+.rec-opp{flex:1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.rec-sc{color:var(--ink-dim);font-variant-numeric:tabular-nums;flex:none}
+.rec-wp{font-weight:800;width:40px;text-align:right;flex:none}
+.rec-wp.w{color:#0f7b3f}.rec-wp.l{color:#c0392b}
+@media(max-width:700px){
+  #rectbl th:nth-child(5),#rectbl td:nth-child(5),#rectbl th:nth-child(6),#rectbl td:nth-child(6){display:none}
+  .rec-slate{grid-template-columns:1fr}
+}
 </style></head><body>
 <header>
   <div class="hwrap">
@@ -566,6 +646,30 @@ input,textarea,select,[contenteditable]{caret-color:#111}
         <th class="l" data-s="name">Player</th><th class="l" data-s="pos">Pos</th><th class="l" data-s="team">Team</th>
         <th data-s="ppg">PPG</th><th data-s="cost">Salary</th><th data-s="assetScore">Value</th><th data-s="keeperVal">Keeper&nbsp;$</th>
       </tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+  </section>
+  <section class="view" id="v-record">
+    <div class="card">
+      <div class="card-h"><h2>Projected <span class="accent">Standings</span></h2><span class="hint">Expected records from each team's best-lineup projected points across the 2026 schedule. Tap a team for its week-by-week slate.</span></div>
+      <div class="rec-controls">
+        <label class="rec-var">Weekly variance <input type="range" id="rec-vol" min="0.1" max="0.4" step="0.01" value="0.24"> <span id="rec-vol-v">0.24</span><span class="rec-varhint">favorites &harr; coin-flips</span></label>
+      </div>
+      <div class="tbl-scroll"><table id="rectbl"><thead><tr><th>#</th><th class="l">Team</th><th>Exp. Record</th><th>Win%</th><th>Proj PF</th><th>Proj PA</th><th>SoS</th></tr></thead><tbody id="rec-rows"></tbody></table></div>
+    </div>
+  </section>
+  <section class="view" id="v-trade">
+    <div class="card">
+      <div class="card-h"><h2>Trade <span class="accent">Analyzer</span></h2><span class="hint">Pick two teams, check who's moving, and see who wins &mdash; on value and on your starting lineup.</span></div>
+      <div class="trd-teams">
+        <div class="trd-side"><select id="trA" class="rooksel"></select><div id="trA-body"></div></div>
+        <div class="trd-swap">&#8646;</div>
+        <div class="trd-side"><select id="trB" class="rooksel"></select><div id="trB-body"></div></div>
+      </div>
+      <div class="trd-controls">
+        <label class="trd-emph">Win-now emphasis <input type="range" id="tr-emph" min="0" max="2" step="0.1" value="1"> <span id="tr-emph-v">1.0&times;</span><span class="trd-emphhint">value &harr; lineup PPG</span></label>
+        <button id="tr-exec" class="trd-exec" disabled>Execute trade</button>
+      </div>
+      <div class="trd-analysis" id="trade-analysis"></div>
     </div>
   </section>
   <!-- AUCTION -->
@@ -1080,6 +1184,136 @@ function detectTiers(pos){
   return tierOf;
 }
 
+const SCHED2026=[[["PHILLY DILLY","STUGOTS"],["Muck Fichigan","Mouth of Madden"],["Dirty Sanchez's","Bzitch"],["Beesnuts","BRO's"],["The Rookie","Local #69"],["I'm Back","Captain Ron"],["Dickey Did It","Johnny Kum Lately"],["Goon Squad","Nobody Beats the Wiz"]],[["PHILLY DILLY","Dickey Did It"],["Goon Squad","Mouth of Madden"],["Beesnuts","Bzitch"],["BRO's","Dirty Sanchez's"],["STUGOTS","Johnny Kum Lately"],["Local #69","Captain Ron"],["The Rookie","I'm Back"],["Nobody Beats the Wiz","Muck Fichigan"]],[["Johnny Kum Lately","PHILLY DILLY"],["Nobody Beats the Wiz","Mouth of Madden"],["BRO's","Bzitch"],["Dirty Sanchez's","Beesnuts"],["STUGOTS","Dickey Did It"],["The Rookie","Captain Ron"],["Local #69","I'm Back"],["Muck Fichigan","Goon Squad"]],[["Goon Squad","PHILLY DILLY"],["Johnny Kum Lately","Muck Fichigan"],["Local #69","Bzitch"],["Dirty Sanchez's","The Rookie"],["STUGOTS","Nobody Beats the Wiz"],["BRO's","I'm Back"],["Beesnuts","Captain Ron"],["Dickey Did It","Mouth of Madden"]],[["Nobody Beats the Wiz","PHILLY DILLY"],["Mouth of Madden","Johnny Kum Lately"],["Bzitch","The Rookie"],["Dirty Sanchez's","Local #69"],["STUGOTS","Goon Squad"],["Captain Ron","BRO's"],["I'm Back","Beesnuts"],["Muck Fichigan","Dickey Did It"]],[["PHILLY DILLY","Mouth of Madden"],["Nobody Beats the Wiz","Johnny Kum Lately"],["Bzitch","Captain Ron"],["Dirty Sanchez's","I'm Back"],["STUGOTS","Muck Fichigan"],["BRO's","The Rookie"],["Local #69","Beesnuts"],["Dickey Did It","Goon Squad"]],[["PHILLY DILLY","Muck Fichigan"],["Johnny Kum Lately","Goon Squad"],["Bzitch","I'm Back"],["Captain Ron","Dirty Sanchez's"],["Mouth of Madden","STUGOTS"],["Local #69","BRO's"],["The Rookie","Beesnuts"],["Nobody Beats the Wiz","Dickey Did It"]],[["PHILLY DILLY","STUGOTS"],["Mouth of Madden","Muck Fichigan"],["Bzitch","Dirty Sanchez's"],["BRO's","Beesnuts"],["The Rookie","Local #69"],["Captain Ron","I'm Back"],["Dickey Did It","Johnny Kum Lately"],["Nobody Beats the Wiz","Goon Squad"]],[["Dickey Did It","PHILLY DILLY"],["Mouth of Madden","Goon Squad"],["Beesnuts","Bzitch"],["BRO's","Dirty Sanchez's"],["Johnny Kum Lately","STUGOTS"],["Captain Ron","Local #69"],["I'm Back","The Rookie"],["Muck Fichigan","Nobody Beats the Wiz"]],[["Johnny Kum Lately","PHILLY DILLY"],["Mouth of Madden","Nobody Beats the Wiz"],["Bzitch","BRO's"],["Dirty Sanchez's","Beesnuts"],["STUGOTS","Dickey Did It"],["Captain Ron","The Rookie"],["I'm Back","Local #69"],["Goon Squad","Muck Fichigan"]],[["Captain Ron","PHILLY DILLY"],["Johnny Kum Lately","The Rookie"],["Mouth of Madden","Bzitch"],["Muck Fichigan","Dirty Sanchez's"],["I'm Back","STUGOTS"],["BRO's","Nobody Beats the Wiz"],["Beesnuts","Goon Squad"],["Local #69","Dickey Did It"]],[["I'm Back","PHILLY DILLY"],["The Rookie","Dickey Did It"],["Bzitch","Muck Fichigan"],["Goon Squad","Dirty Sanchez's"],["Mouth of Madden","BRO's"],["Beesnuts","Nobody Beats the Wiz"],["Captain Ron","Johnny Kum Lately"],["Local #69","STUGOTS"]],[["PHILLY DILLY","Local #69"],["The Rookie","STUGOTS"],["Goon Squad","Bzitch"],["Nobody Beats the Wiz","Dirty Sanchez's"],["I'm Back","Johnny Kum Lately"],["Muck Fichigan","BRO's"],["Beesnuts","Mouth of Madden"],["Dickey Did It","Captain Ron"]],[["PHILLY DILLY","The Rookie"],["Bzitch","Nobody Beats the Wiz"],["Dirty Sanchez's","Mouth of Madden"],["Dickey Did It","I'm Back"],["Goon Squad","BRO's"],["Muck Fichigan","Beesnuts"],["STUGOTS","Captain Ron"],["Johnny Kum Lately","Local #69"]]];
+let recVol=0.24,recOpen=null;
+function _teamPPG(t){return bestLineup(_rosterOf(t)).ppg;}
+function _ncdf(z){var t=1/(1+0.2316419*Math.abs(z));var d=0.3989423*Math.exp(-z*z/2);var p=d*t*(0.3193815+t*(-0.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p;}
+function _expectedRecords(){
+  var ppg={};TEAMS.forEach(function(t){ppg[t]=_teamPPG(t);});
+  var mean=TEAMS.reduce(function(s,t){return s+ppg[t];},0)/(TEAMS.length||1);
+  var sig=Math.max(1,recVol*mean)*Math.SQRT2;
+  var rec={};TEAMS.forEach(function(t){rec[t]={w:0,pa:0,g:0,games:[]};});
+  SCHED2026.forEach(function(wk,wi){wk.forEach(function(m){var a=m[0],b=m[1];if(ppg[a]==null||ppg[b]==null)return;var pa=_ncdf((ppg[a]-ppg[b])/sig),pb=1-pa;rec[a].w+=pa;rec[a].pa+=ppg[b];rec[a].g++;rec[a].games.push({wk:wi+1,opp:b,you:ppg[a],them:ppg[b],p:pa});rec[b].w+=pb;rec[b].pa+=ppg[a];rec[b].g++;rec[b].games.push({wk:wi+1,opp:a,you:ppg[b],them:ppg[a],p:pb});});});
+  var rows=TEAMS.map(function(t){var r=rec[t];return {team:t,w:r.w,l:r.g-r.w,g:r.g,pf:ppg[t]*(r.g||0),pa:r.pa,sos:r.g?r.pa/r.g:0,ppg:ppg[t],games:r.games};});
+  rows.sort(function(x,y){return (y.w-x.w)||(y.pf-x.pf);});
+  return rows;
+}
+function _recSlate(r){return '<div class="rec-slate">'+r.games.map(function(g){var win=g.p>=0.5;return '<div class="rec-g"><span class="rec-wk">W'+g.wk+'</span><span class="rec-opp">'+g.opp+'</span><span class="rec-sc">'+fmt(g.you,1)+' vs '+fmt(g.them,1)+'</span><span class="rec-wp '+(win?'w':'l')+'">'+fmt(g.p*100,0)+'%</span></div>';}).join('')+'</div>';}
+function renderRecords(){
+  var rows=_expectedRecords();var body=$("#rec-rows");if(!body)return;
+  var avgSos=rows.reduce(function(s,x){return s+x.sos;},0)/(rows.length||1);
+  body.innerHTML=rows.map(function(r,i){
+    var rc=fmt(r.w,1)+"-"+fmt(r.l,1);var wp=(r.w+r.l)?fmt(r.w/(r.w+r.l)*100,0)+"%":"\u2014";var open=recOpen===r.team;
+    var car=open?"\u25be":"\u25b8";
+    var main='<tr class="rec-row'+(r.team===myTeam?' me':'')+'" data-team="'+r.team+'"><td>'+(i+1)+'</td><td class="l"><span class="rec-car">'+car+'</span><span class="pname">'+r.team+'</span></td><td class="mono"><b>'+rc+'</b></td><td class="mono">'+wp+'</td><td class="mono">'+fmt(r.pf,0)+'</td><td class="mono">'+fmt(r.pa,0)+'</td><td class="mono" style="color:'+(r.sos>avgSos?"#c0392b":"#0f7b3f")+'">'+fmt(r.sos,1)+'</td></tr>';
+    return main+(open?'<tr class="rec-exp"><td colspan="7">'+_recSlate(r)+'</td></tr>':'');
+  }).join("");
+}
+function wireRecords(){var host=$("#v-record");if(!host)return;
+  host.addEventListener("input",function(e){if(e.target.id==="rec-vol"){recVol=+e.target.value;var v=$("#rec-vol-v");if(v)v.textContent=(+e.target.value).toFixed(2);renderRecords();}});
+  host.addEventListener("click",function(e){var tr=e.target.closest&&e.target.closest(".rec-row");if(tr){recOpen=(recOpen===tr.dataset.team)?null:tr.dataset.team;renderRecords();}});
+}
+/* ---------- TRADE ANALYZER ---------- */
+let trTeamA=null,trTeamB=null;const trSelA=new Set(),trSelB=new Set();let trEmphasis=1;let _trdCanExec=false;
+const PPG_TO_ASSET=5;
+function _asset(p){return p.assetScore!=null?p.assetScore:0;}
+function _rosterOf(t){return MASTER.filter(m=>m.team===t);}
+function _powerPct(){const rows=TEAMS.map(t=>({t,raw:teamPower(t).raw})).sort((a,b)=>b.raw-a.raw);const n=rows.length;const map={};rows.forEach((r,i)=>{map[r.t]=(n<=1)?0.5:1-(i/(n-1));});return map;}
+function _winNow(team,pct){const p=(pct[team]!=null)?pct[team]:0.5;return 0.5+1.3*p;}
+function _contLabel(p){return p>=0.66?'Contender':(p>=0.33?'Bubble':'Rebuild');}
+let _dpp=null;
+function _surp(p){return (p.anchor!=null?p.anchor:(p.cost||0))-(p.cost||0);}
+function _mny(x){return (x>=0?'+$':'-$')+fmt(Math.abs(x),2);}
+function _dollarsPerPpg(){if(_dpp!=null)return _dpp;var a=MASTER.filter(function(p){return p.season!=null&&p.anchor>=3&&p.ppg>0;}).map(function(p){return p.anchor/p.ppg;}).sort(function(x,y){return x-y;});var m=a.length?a[Math.floor(a.length/2)]:1.2;_dpp=Math.max(0.8,Math.min(2.0,m));return _dpp;}
+function _sideList(team,sel,side){
+  const pl=_rosterOf(team).slice().sort((a,b)=>(b.assetScore||0)-(a.assetScore||0));
+  return '<div class="trd-scroll">'+pl.map(function(p){return '<label class="trd-row'+(sel.has(p.id)?' sel':'')+'"><input type="checkbox" data-tside="'+side+'" data-tid="'+p.id+'"'+(sel.has(p.id)?' checked':'')+'><span class="pos-tag '+p.pos+'">'+p.pos+'</span><span class="trd-nm">'+p.name+'</span><span class="trd-ppg">'+fmt(p.ppg,1)+'</span><span class="trd-as" style="color:'+assetColor(p.assetScore||0)+'">'+(p.assetScore==null?'\u2014':p.assetScore)+'</span><span class="trd-sal">'+(p.cost==null?'\u2014':'$'+fmt(p.cost,2))+'</span><span class="trd-surp" style="color:'+(_surp(p)>=0?'#0f7b3f':'#c0392b')+'" title="fair value minus salary">'+_mny(_surp(p))+'</span></label>';}).join('')+'</div>';
+}
+function _trdCard(o){var sg=function(x){return x>=0?'+':'';};
+  return '<div class="trd-card"><div class="trd-cardh">'+o.team+'<span class="trd-wn">'+o.cont+' \u00b7 win-now \u00d7'+o.wn.toFixed(1)+'</span></div>'+
+  '<div class="trd-metrics">'+
+  '<div class="trd-m"><i>Overall value</i><b class="'+(o.dAsset>=0?'pos':'neg')+'">'+sg(o.dAsset)+Math.round(o.dAsset)+'</b></div>'+
+  '<div class="trd-m"><i>Starting PPG</i><b class="'+(o.dPpg>=0?'pos':'neg')+'">'+sg(o.dPpg)+fmt(o.dPpg,1)+'</b><s>'+fmt(o.bl,1)+'\u2192'+fmt(o.al,1)+'</s></div>'+
+  '<div class="trd-m"><i>Cap value</i><b class="'+(o.dSurp>=0?'pos':'neg')+'">'+_mny(o.dSurp)+'</b><s>fair minus salary</s></div>'+
+  '<div class="trd-m"><i>Cap after</i><b class="'+(o.cap>100?'neg':'')+'">$'+fmt(o.cap,2)+'<small>/100</small></b><s>'+_mny(o.dSal)+' salary</s></div>'+
+  '</div>'+
+  (o.errs.length?'<div class="trd-illegal">\u26a0 '+o.errs.join(' \u00b7 ')+'</div>':'')+(o.notes&&o.notes.length?'<div class="trd-note">\u26a0 '+o.notes.join(' \u00b7 ')+'</div>':'')+
+  '<div class="trd-net '+(o.net>3?'win':(o.net<-3?'lose':'fair'))+'">'+(o.net>3?'Wins':(o.net<-3?'Loses':'Fair'))+' for '+o.team+' <span>('+_mny(o.net)+' net)</span></div></div>';
+}
+function _trdStory(tm,ds,dp,dsal,nt,wn){var dsv=fmt(Math.abs(ds),2),dpv=fmt(Math.abs(dp),1);if(ds>=2&&dp>=0.3)return tm+' gains cap value (+$'+fmt(ds,2)+') and lineup (+'+fmt(dp,1)+' PPG) \u2014 a clean win.';if(ds<=-2&&dp>=0.3)return tm+' takes on $'+dsv+' in cap cost for +'+fmt(dp,1)+' starting PPG '+(nt>=0?'\u2014 worth it':'\u2014 not quite enough')+' at their win-now \u00d7'+wn.toFixed(1)+'.';if(ds>=2&&dp<=-0.3)return tm+' banks $'+fmt(ds,2)+' in cap value but sheds '+dpv+' PPG \u2014 a flexibility play.';if(ds<=-2&&dp<=-0.3)return tm+' loses on both cap value (-$'+dsv+') and lineup (-'+dpv+' PPG).';return tm+' comes out about even.';}
+function _tradeAnalysis(){
+  const Sa=Array.from(trSelA).map(function(id){return mById[id];}).filter(Boolean);
+  const Sb=Array.from(trSelB).map(function(id){return mById[id];}).filter(Boolean);
+  _trdCanExec=false;
+  if(!Sa.length&&!Sb.length)return '<div class="trd-empty">Check players on each side to build a trade.</div>';
+  const pct=_powerPct();
+  const rosA=_rosterOf(trTeamA),rosB=_rosterOf(trTeamB);
+  const afterA=rosA.filter(function(p){return !trSelA.has(p.id);}).concat(Sb);
+  const afterB=rosB.filter(function(p){return !trSelB.has(p.id);}).concat(Sa);
+  const blA=bestLineup(rosA).ppg,alA=bestLineup(afterA).ppg,dPpgA=alA-blA;
+  const blB=bestLineup(rosB).ppg,alB=bestLineup(afterB).ppg,dPpgB=alB-blB;
+  const sum=function(arr,f){return arr.reduce(function(x,p){return x+f(p);},0);};
+  const dAssetA=sum(Sb,_asset)-sum(Sa,_asset),dAssetB=-dAssetA;
+  const dSurpA=sum(Sb,_surp)-sum(Sa,_surp),dSurpB=-dSurpA;
+  const dSalA=sum(Sb,function(p){return p.cost||0;})-sum(Sa,function(p){return p.cost||0;}),dSalB=-dSalA;
+  const capA=sum(afterA,function(p){return p.cost||0;}),capB=sum(afterB,function(p){return p.cost||0;});
+  const wnA=_winNow(trTeamA,pct),wnB=_winNow(trTeamB,pct);
+  const DPP=_dollarsPerPpg();
+  const ppgValA=trEmphasis*wnA*DPP*dPpgA,ppgValB=trEmphasis*wnB*DPP*dPpgB;
+  const netA=dSurpA+ppgValA,netB=dSurpB+ppgValB;
+  const flags=function(rosAfter,rosBefore,cap){var errs=[],notes=[];if(rosAfter.length>16)errs.push('over 16 players');if(cap>100)errs.push('over $100 cap ($'+fmt(cap,0)+')');var fB=bestLineup(rosBefore).filled,fA=bestLineup(rosAfter).filled;if(fA<fB)notes.push('opens a starting hole');return {errs:errs,notes:notes};};
+  const fgA=flags(afterA,rosA,capA),fgB=flags(afterB,rosB,capB);
+  const errA=fgA.errs,errB=fgB.errs;
+  _trdCanExec=!errA.length&&!errB.length;
+  const cardA=_trdCard({team:trTeamA,dAsset:dAssetA,dPpg:dPpgA,bl:blA,al:alA,dSurp:dSurpA,dSal:dSalA,cap:capA,net:netA,wn:wnA,cont:_contLabel(pct[trTeamA]),errs:errA,notes:fgA.notes});
+  const cardB=_trdCard({team:trTeamB,dAsset:dAssetB,dPpg:dPpgB,bl:blB,al:alB,dSurp:dSurpB,dSal:dSalB,cap:capB,net:netB,wn:wnB,cont:_contLabel(pct[trTeamB]),errs:errB,notes:fgB.notes});
+  var verdict;
+  if(errA.length||errB.length){verdict='<b class="bad">Illegal trade.</b> '+(errA.length?trTeamA+': '+errA.join(', ')+'. ':'')+(errB.length?trTeamB+': '+errB.join(', ')+'.':'');}
+  else{
+    var storyA=_trdStory(trTeamA,dSurpA,dPpgA,dSalA,netA,wnA),storyB=_trdStory(trTeamB,dSurpB,dPpgB,dSalB,netB,wnB);
+    if(netA>3&&netB>3){verdict='<b class="good">Win-win \u2014 both teams come out ahead.</b> '+storyA+' '+storyB;}
+    else{var winner=netA>=netB?trTeamA:trTeamB;verdict='<b>'+winner+' wins the trade.</b> '+storyA+' '+storyB;}
+  }
+  const summ='<div class="trd-summary"><span><b>'+trTeamA+'</b> sends: '+(Sa.map(function(p){return p.name;}).join(', ')||'nobody')+'</span><span><b>'+trTeamB+'</b> sends: '+(Sb.map(function(p){return p.name;}).join(', ')||'nobody')+'</span></div>';
+  return summ+'<div class="trd-cards">'+cardA+cardB+'</div><div class="trd-verdict">'+verdict+'</div>';
+}
+function renderTrade(){
+  const selA=$('#trA'),selB=$('#trB');if(!selA||!selB)return;
+  if(!trTeamA||TEAMS.indexOf(trTeamA)<0)trTeamA=(myTeam&&TEAMS.indexOf(myTeam)>=0)?myTeam:TEAMS[0];
+  if(!trTeamB||trTeamB===trTeamA||TEAMS.indexOf(trTeamB)<0)trTeamB=TEAMS.find(function(t){return t!==trTeamA;})||TEAMS[1];
+  selA.innerHTML=TEAMS.map(function(t){return '<option'+(t===trTeamA?' selected':'')+'>'+t+'</option>';}).join('');
+  selB.innerHTML=TEAMS.map(function(t){return '<option'+(t===trTeamB?' selected':'')+'>'+t+'</option>';}).join('');
+  $('#trA-body').innerHTML=_sideList(trTeamA,trSelA,'A');
+  $('#trB-body').innerHTML=_sideList(trTeamB,trSelB,'B');
+  $('#trade-analysis').innerHTML=_tradeAnalysis();
+  const em=$('#tr-emph');if(em)em.value=trEmphasis;const emv=$('#tr-emph-v');if(emv)emv.textContent=trEmphasis.toFixed(1)+'\u00d7';
+  const ex=$('#tr-exec');if(ex)ex.disabled=!_trdCanExec;
+}
+function executeTrade(){
+  const Sa=Array.from(trSelA).map(function(id){return mById[id];}).filter(Boolean);
+  const Sb=Array.from(trSelB).map(function(id){return mById[id];}).filter(Boolean);
+  if(!Sa.length&&!Sb.length)return;
+  if(!_trdCanExec){alert('This trade is illegal as-is \u2014 fix the flagged issues first.');return;}
+  if(!confirm('Execute trade?\n\n'+trTeamA+' sends: '+(Sa.map(function(p){return p.name;}).join(', ')||'nobody')+'\n'+trTeamB+' sends: '+(Sb.map(function(p){return p.name;}).join(', ')||'nobody')))return;
+  Sa.forEach(function(p){draftLog.push({id:p.id,name:p.name,pos:p.pos,team:trTeamB,cost:p.cost,prevTeam:p.team,prevCost:p.cost,action:'trade'});p.team=trTeamB;});
+  Sb.forEach(function(p){draftLog.push({id:p.id,name:p.name,pos:p.pos,team:trTeamA,cost:p.cost,prevTeam:p.team,prevCost:p.cost,action:'trade'});p.team=trTeamA;});
+  trSelA.clear();trSelB.clear();
+  if(typeof recomputeDerived==='function')recomputeDerived();
+  if(typeof reprice==='function')reprice();
+  renderTrade();
+  ['renderBoard','renderCap','renderCockpit','renderPower','renderBudgets','renderBench','saveSession'].forEach(function(fn){if(typeof window[fn]==='function')window[fn]();});
+}
+function wireTrade(){
+  const a=$('#trA'),b=$('#trB'),host=$('#v-trade');
+  if(a)a.onchange=function(e){trTeamA=e.target.value;if(trTeamB===trTeamA)trTeamB=TEAMS.find(function(t){return t!==trTeamA;});trSelA.clear();renderTrade();};
+  if(b)b.onchange=function(e){trTeamB=e.target.value;if(trTeamB===trTeamA)trTeamA=TEAMS.find(function(t){return t!==trTeamB;});trSelB.clear();renderTrade();};
+  if(host){
+    host.addEventListener('change',function(e){var cb=e.target.closest&&e.target.closest('[data-tid]');if(cb){var set=cb.dataset.tside==='A'?trSelA:trSelB;if(cb.checked)set.add(cb.dataset.tid);else set.delete(cb.dataset.tid);renderTrade();}});
+    host.addEventListener('input',function(e){if(e.target.id==='tr-emph'){trEmphasis=+e.target.value;var emv=$('#tr-emph-v');if(emv)emv.textContent=trEmphasis.toFixed(1)+'\u00d7';var an=$('#trade-analysis');if(an)an.innerHTML=_tradeAnalysis();var ex=$('#tr-exec');if(ex)ex.disabled=!_trdCanExec;}});
+    host.addEventListener('click',function(e){if(e.target.id==='tr-exec')executeTrade();});
+  }
+}
+
 function renderAuction(){
   const d=poolData();$('#auccount').textContent=d.length+' available';
   if(typeof renderHud==='function'){renderHud();refreshBlockList();}
@@ -1446,14 +1680,14 @@ function importSession(file){const fr=new FileReader();fr.onload=function(){try{
 document.addEventListener('click',function(e){const w=e.target.closest&&e.target.closest('[data-watch]');if(w){const id=w.dataset.watch;if(watchSet.has(id))watchSet.delete(id);else watchSet.add(id);saveSession();renderAuction();renderBoard();}});
 
 /* ---------- NAV ---------- */
-const GROUPS={me:[{v:'cockpit',label:'My Team'}],pool:[{v:'auction',label:'Auction'},{v:'rookie',label:'Rookies'}],league:[{v:'power',label:'Power'},{v:'budgets',label:'Budgets'},{v:'draft',label:'Rosters'},{v:'cap',label:'Cap Sheet'},{v:'bench',label:'History'}]};
+const GROUPS={me:[{v:'cockpit',label:'My Team'}],pool:[{v:'auction',label:'Auction'},{v:'rookie',label:'Rookies'}],league:[{v:'power',label:'Power'},{v:'budgets',label:'Budgets'},{v:'record',label:'Records'},{v:'draft',label:'Rosters'},{v:'trade',label:'Trade'},{v:'cap',label:'Cap Sheet'},{v:'bench',label:'History'}]};
 let activeGroup='me',activeView='cockpit';const lastView={me:'cockpit',pool:'auction',league:'power'};
-function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));const el=$('#v-'+v);if(el)el.classList.add('on');activeView=v;if(v==='auction'&&typeof renderAuction==='function')renderAuction();}
+function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));const el=$('#v-'+v);if(el)el.classList.add('on');activeView=v;if(v==='auction'&&typeof renderAuction==='function')renderAuction();if(v==='trade'&&typeof renderTrade==='function')renderTrade();if(v==='record'&&typeof renderRecords==='function')renderRecords();}
 function renderSubnav(){const items=GROUPS[activeGroup]||[];const sn=$('#subnav'),sw=$('#subwrap');if(!sn)return;if(items.length<=1){sn.innerHTML='';if(sw)sw.style.display='none';return;}if(sw)sw.style.display='';sn.innerHTML=items.map(it=>`<button class="${it.v===activeView?'on':''}" data-v="${it.v}">${it.label}</button>`).join('');sn.querySelectorAll('button').forEach(b=>b.onclick=()=>{lastView[activeGroup]=b.dataset.v;showView(b.dataset.v);sn.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));window.scrollTo(0,0);});}
 function selectGroup(g){activeGroup=g;document.querySelectorAll('#topnav button').forEach(x=>x.classList.toggle('on',x.dataset.group===g));showView(lastView[g]||GROUPS[g][0].v);renderSubnav();window.scrollTo(0,0);}
 document.querySelectorAll('#topnav button').forEach(b=>b.onclick=()=>selectGroup(b.dataset.group));
 selectGroup('me');
 $('#foot').innerHTML='MMFL Draft War Room \u00B7 all projected points run through the league\u2019s tiered scoring \u00B7 '+DATA.players.length+' projected players \u00B7 '+MASTER.filter(m=>m.team).length+' rostered / '+MASTER.filter(m=>!m.team).length+' free agents';
 applyLeagueOverrides();wireDataIO();INITIAL_ROSTERED=new Set(MASTER.filter(m=>m.team).map(m=>m.id));MASTER.forEach(m=>{INITIAL_STATE[m.id]={team:m.team,cost:m.cost};});loadSession();reprice();sqRender();renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();saveSession();renderBench();renderRookie();initControls();
-try{if(typeof wireWarbar==='function')wireWarbar();if(typeof setStickyOffset==='function'){setStickyOffset();window.addEventListener('resize',setStickyOffset);}if(typeof renderBlock==='function')renderBlock();document.addEventListener('keydown',function(e){if((e.key==='n'||e.key==='/')&&typeof activeView!=='undefined'&&activeView==='auction'){var t=(e.target&&e.target.tagName)||'';if(t!=='INPUT'&&t!=='SELECT'&&t!=='TEXTAREA'){e.preventDefault();var sIn=document.getElementById('wb-search');if(sIn)sIn.focus();}}});}catch(e){}
+try{if(typeof wireRecords==='function')wireRecords();if(typeof wireTrade==='function')wireTrade();if(typeof wireWarbar==='function')wireWarbar();if(typeof setStickyOffset==='function'){setStickyOffset();window.addEventListener('resize',setStickyOffset);}if(typeof renderBlock==='function')renderBlock();document.addEventListener('keydown',function(e){if((e.key==='n'||e.key==='/')&&typeof activeView!=='undefined'&&activeView==='auction'){var t=(e.target&&e.target.tagName)||'';if(t!=='INPUT'&&t!=='SELECT'&&t!=='TEXTAREA'){e.preventDefault();var sIn=document.getElementById('wb-search');if(sIn)sIn.focus();}}});}catch(e){}
 </script></body></html>
