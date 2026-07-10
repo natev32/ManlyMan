@@ -204,6 +204,10 @@ header .caplegend b{color:var(--gold)}
 .dlog-count{color:var(--ink-faint);font-weight:600}
 .dlog-chev{margin-left:auto;transition:transform .18s ease;font-size:12px;color:var(--ink-faint)}
 .lg-empty{color:var(--ink-faint);font-size:12px}
+
+.lg-filter{font:inherit;font-size:11px;padding:3px 7px;border:1px solid var(--line2);border-radius:999px;background:#fff;width:90px;margin-right:2px}
+.lg-more{font:inherit;cursor:pointer;border:1px dashed var(--line2);background:transparent;color:var(--ink-dim);border-radius:999px;padding:3px 9px;font-size:11px}
+.lg-more:hover{border-color:var(--gold);color:var(--gold)}
 .lg-undo{font-family:var(--cond);text-transform:uppercase;letter-spacing:.5px;font-size:11px;font-weight:700;background:var(--steel);color:#fff;border:none;border-radius:6px;padding:6px 11px;cursor:pointer}
 .lg-undo:hover{filter:brightness(1.08)}
 .lg-chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;background:var(--panel2);border:1px solid var(--line2);border-radius:7px;padding:3px 4px 3px 6px}
@@ -1588,17 +1592,26 @@ document.addEventListener('click',function(e){
 
 /* ---------- DRAFT LOG + UNDO ---------- */
 let draftLog=[];
+let dlogExpanded=false; let dlogFilter='';
 let dlogCollapsed=false;try{dlogCollapsed=localStorage.getItem('mmfl_dlog_collapsed')==='1';}catch(e){}
 function applyDlogState(){const dl=$('#draftlog'),ch=$('#dlog-chev');if(dl)dl.style.display=dlogCollapsed?'none':'';if(ch)ch.style.transform=dlogCollapsed?'rotate(-90deg)':'';}
 function renderDraftLog(){
   const el=$('#draftlog'); if(!el)return;
   const _dc=$('#dlog-count');if(_dc)_dc.textContent=draftLog.length?('· '+draftLog.length):'';
   if(!draftLog.length){el.innerHTML='<span class="lg-empty">No picks yet \u2014 drafts and cuts log here with one-tap undo.</span>';return;}
-  const items=draftLog.map((e,i)=>({e,i})).reverse(), shown=items.slice(0,14), more=items.length-shown.length;
-  el.innerHTML='<button class="lg-undo" data-undo="'+(draftLog.length-1)+'">\u21B6 Undo last</button>'
+  let items=draftLog.map((e,i)=>({e,i})).reverse();
+  const q=dlogFilter.trim().toLowerCase();
+  if(q)items=items.filter(({e})=>(e.name||'').toLowerCase().indexOf(q)>=0||(e.team||'').toLowerCase().indexOf(q)>=0||(e.pos||'').toLowerCase().indexOf(q)>=0);
+  const cap=(dlogExpanded||q)?items.length:14, shown=items.slice(0,cap), more=items.length-shown.length;
+  const filterBox=`<input class="lg-filter" id="lg-filter" type="text" placeholder="filter\u2026" value="${dlogFilter.replace(/"/g,'&quot;')}">`;
+  el.innerHTML='<button class="lg-undo" data-undo="'+(draftLog.length-1)+'">\u21B6 Undo last</button>'+filterBox
+    +(q&&!shown.length?'<span class="lg-empty">No matches.</span>':'')
     +shown.map(({e,i})=>{const lbl=e.action==='cut'?`<b>${e.name}</b> \u2715 cut`:`<b>${e.name}</b> \u2192 ${e.team} $${fmt(e.cost,2)}`;
       return `<span class="lg-chip ${e.action}"><span class="pos-tag ${e.pos}">${e.pos}</span> ${lbl} <button class="lg-x" data-undo="${i}" title="undo this">\u00D7</button></span>`;}).join('')
-    +(more>0?`<span class="lg-more">+${more} earlier</span>`:'');
+    +(more>0?`<button class="lg-more" id="lg-expand">+${more} earlier \u2014 show all</button>`:(dlogExpanded&&!q&&items.length>14?`<button class="lg-more" id="lg-collapse">show fewer</button>`:''));
+  const ex=$('#lg-expand');if(ex)ex.addEventListener('click',()=>{dlogExpanded=true;renderDraftLog();});
+  const co=$('#lg-collapse');if(co)co.addEventListener('click',()=>{dlogExpanded=false;renderDraftLog();});
+  const fb=$('#lg-filter');if(fb)fb.addEventListener('input',e=>{dlogFilter=e.target.value;const pos=e.target.selectionStart;renderDraftLog();const nb=$('#lg-filter');if(nb){nb.focus();try{nb.setSelectionRange(pos,pos);}catch(_){}}});
 }
 (function(){const t=$('#dlog-toggle');if(t)t.addEventListener('click',()=>{dlogCollapsed=!dlogCollapsed;try{localStorage.setItem('mmfl_dlog_collapsed',dlogCollapsed?'1':'0');}catch(e){}applyDlogState();});applyDlogState();})();
 function undoEntry(idx){const e=draftLog[idx];if(!e)return;const m=mById[e.id];if(m){m.team=e.prevTeam;m.cost=e.prevCost;}draftLog.splice(idx,1);
