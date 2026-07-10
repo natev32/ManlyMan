@@ -1,7 +1,7 @@
 {
   "kind": "mmfl_archive",
   "schemaVersion": 1,
-  "updatedAt": "2026-07-10T14:57:17.404Z",
+  "updatedAt": "2026-07-10T23:56:47.334Z",
   "players": {},
   "seasons": {
     "2026": {
@@ -15,5 +15,6 @@
       "fromRollover": false,
       "manualSubmit": false
     }
-  }
+  },
+  "remoteUpdatedAt": "2026-07-10T14:57:17.404Z"
 }
