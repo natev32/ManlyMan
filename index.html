@@ -803,6 +803,9 @@ const VPOS=['QB','RB','WR','TE','K','DST'];
 // VOR-tuned recalibration: de-emphasize QB, lift WR/DST, steepen elite dollar anchors so studs aren't capped
 const RECAL={QB:{heat:0.70,elite:1.00},RB:{heat:1.00,elite:1.30},WR:{heat:1.16,elite:1.42},TE:{heat:1.02,elite:1.24},K:{heat:1.00,elite:1.00},DST:{heat:1.30,elite:1.00}};
 try{VPOS.forEach(p=>{if(DATA.priceParams&&DATA.priceParams[p]&&RECAL[p])DATA.priceParams[p].elite=+(DATA.priceParams[p].elite*RECAL[p].elite).toFixed(2);});}catch(e){}
+/* fingerprint of the pricing model shipped in THIS file; stale sessions must not override it */
+const MODEL_VERSION=(()=>{try{return JSON.stringify(DATA.priceParams)+'|'+JSON.stringify(RECAL)+'|'+JSON.stringify(DATA.priceDefaults);}catch(e){return 'v0';}})();
+function resetSliders(){VPOS.forEach(p=>{SLIDERS[p]=defSlider(p);});marketScale=1;}
 function defSlider(p){return Object.assign({heat:1,sens:1,gamma:0.85},DATA.priceDefaults||{},{heat:(RECAL[p]?RECAL[p].heat:1)});}
 let marketScale=1; let MARKET_FLOOR=1.25; /* pre-draft expected-spend markup; fades into live inflation */
 const POS_SCARCITY={RB:1.0,WR:1.0,TE:0.65,QB:0.4,DST:0.3,K:0.25};
@@ -1604,8 +1607,11 @@ document.addEventListener('click',function(e){const u=e.target.closest('[data-un
 
 /* ---------- WATCHLIST + SESSION PERSISTENCE ---------- */
 let watchSet=new Set(), aWatch=false, INITIAL_STATE={};
-function sessionData(){const a={};MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};if(m.team!==i.team||m.cost!==i.cost)a[m.id]={team:m.team,cost:m.cost,contractYr:m.contractYr};});const adj={};MASTER.forEach(m=>{if(m.adj){const e={ppg:m.ppg,season:m.season};if(m.stats)e.stats=m.stats;if(m.ppgOrig!=null){e.ppgOrig=m.ppgOrig;e.seasonOrig=m.seasonOrig;}adj[m.id]=e;}});return {v:1,assign:a,watch:Array.from(watchSet),myTeam:myTeam,sliders:SLIDERS,marketScale:marketScale,marketFloor:MARKET_FLOOR,draftLog:draftLog,rookiePicks:rookiePicks,adjusts:adj};}
-function applySession(d){if(!d)return;if(d.assign)for(const id in d.assign){const m=mById[id];if(m){m.team=d.assign[id].team;m.cost=d.assign[id].cost;if(d.assign[id].contractYr!=null)m.contractYr=d.assign[id].contractYr;}}if(d.watch)watchSet=new Set(d.watch);if(d.myTeam)myTeam=d.myTeam;if(d.sliders)SLIDERS=d.sliders;marketScale=1;if(d.marketFloor!=null)MARKET_FLOOR=d.marketFloor;if(d.draftLog)draftLog=d.draftLog;if(d.rookiePicks)rookiePicks=d.rookiePicks;if(d.adjusts){for(const id in d.adjusts){const m=mById[id];if(m){const aa=d.adjusts[id];if(aa.stats)m.stats=Object.assign({},aa.stats);if(aa.ppgOrig!=null){m.ppgOrig=aa.ppgOrig;m.seasonOrig=aa.seasonOrig;}if(aa.ppg!=null)m.ppg=aa.ppg;if(aa.season!=null)m.season=aa.season;m.adj=true;}}if(typeof recomputeDerived==='function')recomputeDerived();}}
+function sessionData(){const a={};MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};if(m.team!==i.team||m.cost!==i.cost)a[m.id]={team:m.team,cost:m.cost,contractYr:m.contractYr};});const adj={};MASTER.forEach(m=>{if(m.adj){const e={ppg:m.ppg,season:m.season};if(m.stats)e.stats=m.stats;if(m.ppgOrig!=null){e.ppgOrig=m.ppgOrig;e.seasonOrig=m.seasonOrig;}adj[m.id]=e;}});return {v:1,mv:MODEL_VERSION,assign:a,watch:Array.from(watchSet),myTeam:myTeam,sliders:SLIDERS,marketScale:marketScale,marketFloor:MARKET_FLOOR,draftLog:draftLog,rookiePicks:rookiePicks,adjusts:adj};}
+function applySession(d){if(!d)return;if(d.assign)for(const id in d.assign){const m=mById[id];if(m){m.team=d.assign[id].team;m.cost=d.assign[id].cost;if(d.assign[id].contractYr!=null)m.contractYr=d.assign[id].contractYr;}}if(d.watch)watchSet=new Set(d.watch);if(d.myTeam)myTeam=d.myTeam;
+  /* a session saved under a different pricing model would silently override this file's values */
+  if(d.sliders&&d.mv===MODEL_VERSION)SLIDERS=d.sliders;else if(typeof resetSliders==='function')resetSliders();
+  marketScale=1;if(d.marketFloor!=null)MARKET_FLOOR=d.marketFloor;if(d.draftLog)draftLog=d.draftLog;if(d.rookiePicks)rookiePicks=d.rookiePicks;if(d.adjusts){for(const id in d.adjusts){const m=mById[id];if(m){const aa=d.adjusts[id];if(aa.stats)m.stats=Object.assign({},aa.stats);if(aa.ppgOrig!=null){m.ppgOrig=aa.ppgOrig;m.seasonOrig=aa.seasonOrig;}if(aa.ppg!=null)m.ppg=aa.ppg;if(aa.season!=null)m.season=aa.season;m.adj=true;}}if(typeof recomputeDerived==='function')recomputeDerived();}}
 var cardOpenId=null;let adjOpen=null;
 function refreshCardIfOpen(){const ov=$('#pcard');if(cardOpenId&&ov&&!ov.hidden&&mById[cardOpenId])openCard(cardOpenId);}
 function saveSession(){try{localStorage.setItem('mmfl_war_room',JSON.stringify(sessionData()));}catch(e){} if(typeof refreshCardIfOpen==='function')refreshCardIfOpen();}
