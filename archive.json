@@ -1,0 +1,19 @@
+{
+  "kind": "mmfl_archive",
+  "schemaVersion": 1,
+  "updatedAt": "2026-07-10T14:57:17.404Z",
+  "players": {},
+  "seasons": {
+    "2026": {
+      "season": "2026",
+      "locked": false,
+      "createdAt": "2026-07-10T14:56:44.244Z",
+      "teams": {},
+      "weekly": {},
+      "results": null,
+      "model": null,
+      "fromRollover": false,
+      "manualSubmit": false
+    }
+  }
+}
