@@ -2193,7 +2193,7 @@ function renderSync(){
    +`<button class="sbtn arch-primary" id="gh-push">Save to GitHub</button>`
    +`<input id="gh-token" type="password" placeholder="${c.token?'token saved \u2713':'paste PAT to enable saving'}" style="flex:1 1 180px;font:inherit;font-size:11px;padding:4px 6px;border:1px solid var(--line2);border-radius:5px">`
    +`<button class="sbtn" id="gh-tok">Save token</button>`
-   +`</div><div id="gh-msg" class="arch-note"></div>`
+   +`</div><div id="gh-msg" class="arch-note">${(typeof _sessConflict!=="undefined"&&_sessConflict)?("\u26A0 "+_sessConflict.msg):""}</div>`
    +`<div class="arch-note">Save &amp; Pull now cover <b>both</b> your season history and your live draft board. Pull needs nothing; saving needs a <b>fine-grained</b> token on <b>${c.owner}/${c.repo}</b>, Contents: read+write. During the live auction, draft on <b>one</b> device and Save before switching. This repo is public \u2014 both files are world-readable.</div>`;
   const msg=t=>{const m=$('#gh-msg');if(m)m.textContent=t;};
   const rl=$('#gh-reload');if(rl)rl.addEventListener('click',()=>{try{if(typeof saveSession==='function')saveSession();}catch(e){}const u=location.href.split('#')[0];location.replace(u+(u.indexOf('?')>=0?'&':'?')+'r='+Date.now());});
@@ -2207,6 +2207,9 @@ function renderSync(){
 /* boot: adopt the repo copy if it is newer */
 /* ---- draft-session sync: the live auction board, shared across devices ---- */
 let _sessRemoteSeen=null;
+function _sessSynced(){try{return localStorage.getItem('mmfl_sess_synced')||null;}catch(e){return null;}}
+function _setSessSynced(t){try{localStorage.setItem('mmfl_sess_synced',t||'');}catch(e){}}
+function _sessDirty(){const n=_sessAssignN(_localSess());if(!n)return false;const st=_localSessStamp();const sy=_sessSynced();return !sy||st!==sy;}
 function _sessPath(){const c=ghCfg();const p=c.path||'archive.json';const dir=(p.indexOf('/')>=0)?p.slice(0,p.lastIndexOf('/')+1):'';return dir+'session.json';}
 function _localSess(){try{const r=localStorage.getItem('mmfl_war_room');if(r)return JSON.parse(r);}catch(e){}return null;}
 function _localSessStamp(){const d=_localSess();return d&&d.updatedAt||null;}
@@ -2224,10 +2227,12 @@ async function ghPullSession(opts){
   if(theirs&&theirs===_sessRemoteSeen&&!opts.force)return {ok:true,skipped:true,msg:'Draft board already current.'};
   const newer=theirs&&(!mine||theirs>mine);
   if(!newer&&localN>0&&!opts.force)return {ok:true,skipped:true,msg:'Draft board already current.'};
+  if(newer&&localN>0&&_sessDirty()&&!opts.force)return {ok:true,skipped:true,conflict:true,theirs:theirs,msg:'Repo has a newer board, but this device has unsaved changes \u2014 not overwriting. Save yours, or tap Pull to load the repo\'s.'};
   if(opts.confirm&&localN>0&&!confirm('Load the draft board from the repo ('+(theirs||'?')+')?\nThis replaces the board in THIS browser.'))return {ok:false,msg:'Cancelled.'};
+  MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};m.team=(i.team!=null?i.team:null);m.cost=(i.cost!=null?i.cost:null);m.contractYr=null;});  /* clean slate so the adopted board is an EXACT copy */
   applySession(d);
   try{localStorage.setItem('mmfl_war_room',JSON.stringify(d));}catch(e){}   /* keep the remote stamp */
-  _sessRemoteSeen=theirs;
+  _sessRemoteSeen=theirs;_setSessSynced(theirs);
   return {ok:true,adopted:true,msg:'Draft board loaded from repo ('+(theirs||'no timestamp')+').'};
 }
 async function ghPushSession(){
@@ -2255,13 +2260,16 @@ async function ghPushSession(){
   try{
     const r=await fetch(api,{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},H),body:JSON.stringify(body)});
     if(!r.ok)return {ok:false,msg:'Session push failed ('+r.status+').'};
-    _sessRemoteSeen=sess.updatedAt;return {ok:true,msg:'Draft board saved \u2713'};
+    _sessRemoteSeen=sess.updatedAt;_setSessSynced(sess.updatedAt);return {ok:true,msg:'Draft board saved \u2713'};
   }catch(e){return {ok:false,msg:'Session push failed.'};}
 }
+let _sessConflict=null;
 async function ghBootPull(){
   try{
     const r=await ghPull({});
     const rs=await ghPullSession({});
+    _sessConflict=(rs&&rs.conflict)?rs:null;
+    if(_sessConflict&&typeof renderSync==='function')renderSync();
     if((r&&r.adopted)||(rs&&rs.adopted)){
       if(typeof recomputeDerived==='function')recomputeDerived();reprice();
       if(typeof rerenderAll==='function'){try{rerenderAll();}catch(e){}}
