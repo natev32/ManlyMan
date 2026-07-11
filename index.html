@@ -1620,14 +1620,20 @@ document.addEventListener('click',function(e){const u=e.target.closest('[data-un
 
 /* ---------- WATCHLIST + SESSION PERSISTENCE ---------- */
 let watchSet=new Set(), aWatch=false, INITIAL_STATE={};
-function sessionData(){const a={};MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};if(m.team!==i.team||m.cost!==i.cost)a[m.id]={team:m.team,cost:m.cost,contractYr:m.contractYr};});const adj={};MASTER.forEach(m=>{if(m.adj){const e={ppg:m.ppg,season:m.season};if(m.stats)e.stats=m.stats;if(m.ppgOrig!=null){e.ppgOrig=m.ppgOrig;e.seasonOrig=m.seasonOrig;}adj[m.id]=e;}});return {v:1,mv:MODEL_VERSION,assign:a,watch:Array.from(watchSet),myTeam:myTeam,sliders:SLIDERS,marketScale:marketScale,marketFloor:MARKET_FLOOR,draftLog:draftLog,rookiePicks:rookiePicks,adjusts:adj};}
+function sessionData(){const a={};MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};if(m.team!==i.team||m.cost!==i.cost)a[m.id]={team:m.team,cost:m.cost,contractYr:m.contractYr};});const adj={};MASTER.forEach(m=>{if(m.adj){const e={ppg:m.ppg,season:m.season};if(m.stats)e.stats=m.stats;if(m.ppgOrig!=null){e.ppgOrig=m.ppgOrig;e.seasonOrig=m.seasonOrig;}adj[m.id]=e;}});return {v:1,mv:MODEL_VERSION,updatedAt:new Date().toISOString(),assign:a,watch:Array.from(watchSet),myTeam:myTeam,sliders:SLIDERS,marketScale:marketScale,marketFloor:MARKET_FLOOR,draftLog:draftLog,rookiePicks:rookiePicks,adjusts:adj};}
 function applySession(d){if(!d)return;if(d.assign)for(const id in d.assign){const m=mById[id];if(m){m.team=d.assign[id].team;m.cost=d.assign[id].cost;if(d.assign[id].contractYr!=null)m.contractYr=d.assign[id].contractYr;}}if(d.watch)watchSet=new Set(d.watch);if(d.myTeam)myTeam=d.myTeam;
   /* a session saved under a different pricing model would silently override this file's values */
   if(d.sliders&&d.mv===MODEL_VERSION)SLIDERS=d.sliders;else if(typeof resetSliders==='function')resetSliders();
   marketScale=1;if(d.marketFloor!=null)MARKET_FLOOR=d.marketFloor;if(d.draftLog)draftLog=d.draftLog;if(d.rookiePicks)rookiePicks=d.rookiePicks;if(d.adjusts){for(const id in d.adjusts){const m=mById[id];if(m){const aa=d.adjusts[id];if(aa.stats)m.stats=Object.assign({},aa.stats);if(aa.ppgOrig!=null){m.ppgOrig=aa.ppgOrig;m.seasonOrig=aa.seasonOrig;}if(aa.ppg!=null)m.ppg=aa.ppg;if(aa.season!=null)m.season=aa.season;m.adj=true;}}if(typeof recomputeDerived==='function')recomputeDerived();}}
 var cardOpenId=null;let adjOpen=null;
 function refreshCardIfOpen(){const ov=$('#pcard');if(cardOpenId&&ov&&!ov.hidden&&mById[cardOpenId])openCard(cardOpenId);}
-function saveSession(){try{localStorage.setItem('mmfl_war_room',JSON.stringify(sessionData()));}catch(e){} if(typeof refreshCardIfOpen==='function')refreshCardIfOpen();}
+function saveSession(){try{
+    const d=sessionData();
+    const bodyNow=JSON.stringify(Object.assign({},d,{updatedAt:0}));
+    const prev=localStorage.getItem('mmfl_war_room');
+    if(prev){try{const pd=JSON.parse(prev);const prevBody=JSON.stringify(Object.assign({},pd,{updatedAt:0}));if(prevBody===bodyNow&&pd.updatedAt)d.updatedAt=pd.updatedAt;}catch(e){}}
+    localStorage.setItem('mmfl_war_room',JSON.stringify(d));
+  }catch(e){} if(typeof refreshCardIfOpen==='function')refreshCardIfOpen();}
 function loadSession(){try{const r=localStorage.getItem('mmfl_war_room');if(r)applySession(JSON.parse(r));}catch(e){}}
 function reprice(){_assetFit=null;MASTER.forEach(m=>{m.anchor=priceOf(m,SLIDERS);m.valPerPt=(m.season>0?+(m.anchor/m.season).toFixed(3):null);});if(DATA.rookiePool)DATA.rookiePool.forEach(r=>{const mm=mById[r.id];if(mm)r.value=mm.anchor;});}
 function dlJSON(obj,name){try{const b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e){}}
@@ -2187,21 +2193,78 @@ function renderSync(){
    +`<input id="gh-token" type="password" placeholder="${c.token?'token saved \u2713':'paste PAT to enable saving'}" style="flex:1 1 180px;font:inherit;font-size:11px;padding:4px 6px;border:1px solid var(--line2);border-radius:5px">`
    +`<button class="sbtn" id="gh-tok">Save token</button>`
    +`</div><div id="gh-msg" class="arch-note"></div>`
-   +`<div class="arch-note">Pull needs nothing. Saving needs a <b>fine-grained</b> token scoped to <b>${c.owner}/${c.repo}</b> only, Contents: read+write. This repo is public \u2014 the archive is world-readable.</div>`;
+   +`<div class="arch-note">Save &amp; Pull now cover <b>both</b> your season history and your live draft board. Pull needs nothing; saving needs a <b>fine-grained</b> token on <b>${c.owner}/${c.repo}</b>, Contents: read+write. During the live auction, draft on <b>one</b> device and Save before switching. This repo is public \u2014 both files are world-readable.</div>`;
   const msg=t=>{const m=$('#gh-msg');if(m)m.textContent=t;};
-  $('#gh-pull').addEventListener('click',async()=>{msg('Pulling\u2026');const r=await ghPull({force:true,confirm:true});msg(r.msg);
-    if(r.adopted){if(typeof recomputeDerived==='function')recomputeDerived();reprice();if(typeof rerenderAll==='function'){try{rerenderAll();}catch(e){}}renderArchive();}});
-  $('#gh-push').addEventListener('click',async()=>{msg('Saving\u2026');const r=await ghPush();msg(r.msg);renderSync();});
+  $('#gh-pull').addEventListener('click',async()=>{msg('Pulling\u2026');const r=await ghPull({force:true,confirm:true});const rs=await ghPullSession({force:true,confirm:true});
+    msg('History: '+(r.ok?(r.adopted?'loaded':'current'):r.msg)+' \u00b7 Draft board: '+(rs.ok?(rs.adopted?'loaded':'current'):rs.msg));
+    if(r.adopted||rs.adopted){if(typeof recomputeDerived==='function')recomputeDerived();reprice();if(typeof rerenderAll==='function'){try{rerenderAll();}catch(e){}}renderArchive();}});
+  $('#gh-push').addEventListener('click',async()=>{msg('Saving\u2026');const r=await ghPush();const rs=await ghPushSession();msg('History: '+(r.ok?'\u2713':r.msg)+' \u00b7 Draft board: '+(rs.ok?'\u2713':rs.msg));renderSync();});
   $('#gh-tok').addEventListener('click',()=>{const v=$('#gh-token').value.trim();const cc=ghCfg();cc.token=v;ghSaveCfg(cc);renderSync();
     const m=$('#gh-msg');if(m)m.textContent=v?'Token saved to this browser.':'Token cleared.';});
 }
 /* boot: adopt the repo copy if it is newer */
+/* ---- draft-session sync: the live auction board, shared across devices ---- */
+let _sessRemoteSeen=null;
+function _sessPath(){const c=ghCfg();const p=c.path||'archive.json';const dir=(p.indexOf('/')>=0)?p.slice(0,p.lastIndexOf('/')+1):'';return dir+'session.json';}
+function _localSess(){try{const r=localStorage.getItem('mmfl_war_room');if(r)return JSON.parse(r);}catch(e){}return null;}
+function _localSessStamp(){const d=_localSess();return d&&d.updatedAt||null;}
+function _sessAssignN(d){try{return d&&d.assign?Object.keys(d.assign).length:0;}catch(e){return 0;}}
+
+async function ghPullSession(opts){
+  opts=opts||{};const c=ghCfg(),path=_sessPath();let txt=null;
+  try{const r=await fetch('./'+path+'?t='+Date.now(),{cache:'no-store'});if(r.ok)txt=await r.text();}catch(e){}
+  if(txt==null){try{const r2=await fetch('https://raw.githubusercontent.com/'+c.owner+'/'+c.repo+'/'+c.branch+'/'+path+'?t='+Date.now(),{cache:'no-store'});if(r2.ok)txt=await r2.text();}catch(e){}}
+  if(txt==null)return {ok:false,msg:'No draft board in the repo yet.'};
+  let d;try{d=JSON.parse(txt);}catch(e){return {ok:false,msg:'session.json is not valid JSON.'};}
+  if(!d||d.assign==null||d.v==null)return {ok:false,msg:'That file is not a draft board.'};
+  const mine=_localSessStamp(),theirs=d.updatedAt||null;
+  const localN=_sessAssignN(_localSess());
+  if(theirs&&theirs===_sessRemoteSeen&&!opts.force)return {ok:true,skipped:true,msg:'Draft board already current.'};
+  const newer=theirs&&(!mine||theirs>mine);
+  if(!newer&&localN>0&&!opts.force)return {ok:true,skipped:true,msg:'Draft board already current.'};
+  if(opts.confirm&&localN>0&&!confirm('Load the draft board from the repo ('+(theirs||'?')+')?\nThis replaces the board in THIS browser.'))return {ok:false,msg:'Cancelled.'};
+  applySession(d);
+  try{localStorage.setItem('mmfl_war_room',JSON.stringify(d));}catch(e){}   /* keep the remote stamp */
+  _sessRemoteSeen=theirs;
+  return {ok:true,adopted:true,msg:'Draft board loaded from repo ('+(theirs||'no timestamp')+').'};
+}
+async function ghPushSession(){
+  const c=ghCfg();if(!c.token)return {ok:false,msg:'Add a token to save.'};
+  const path=_sessPath();
+  const api='https://api.github.com/repos/'+c.owner+'/'+c.repo+'/contents/'+path;
+  const H={'Authorization':'Bearer '+c.token,'Accept':'application/vnd.github+json'};
+  let sha=null,remote=null;
+  try{
+    const g=await fetch(api+'?ref='+c.branch,{headers:H,cache:'no-store'});
+    if(g.status===200){const j=await g.json();sha=j.sha;try{remote=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));}catch(e){}}
+    else if(g.status===401||g.status===403)return {ok:false,msg:'Token rejected (401/403).'};
+  }catch(e){return {ok:false,msg:'Could not reach GitHub.'};}
+  const localN=_sessAssignN(sessionData()),remoteN=_sessAssignN(remote);
+  if(localN===0&&remoteN>0){if(!confirm('This browser\'s draft board is empty, but the repo has '+remoteN+' picks. Overwrite it with an empty board?'))return {ok:false,msg:'Session push cancelled.'};}
+  if(remote&&remote.updatedAt){
+    if(remote.updatedAt>(_localSessStamp()||'')&&remote.updatedAt!==_sessRemoteSeen){
+      if(!confirm('The repo draft board is NEWER than this browser\'s ('+remote.updatedAt+').\nPushing overwrites it. Continue?'))return {ok:false,msg:'Push cancelled \u2014 pull first.'};
+    }
+  }
+  const sess=sessionData();sess.updatedAt=new Date().toISOString();
+  try{localStorage.setItem('mmfl_war_room',JSON.stringify(sess));}catch(e){}
+  const body={message:'draft board '+sess.updatedAt,content:_b64(JSON.stringify(sess,null,2)),branch:c.branch};
+  if(sha)body.sha=sha;
+  try{
+    const r=await fetch(api,{method:'PUT',headers:Object.assign({'Content-Type':'application/json'},H),body:JSON.stringify(body)});
+    if(!r.ok)return {ok:false,msg:'Session push failed ('+r.status+').'};
+    _sessRemoteSeen=sess.updatedAt;return {ok:true,msg:'Draft board saved \u2713'};
+  }catch(e){return {ok:false,msg:'Session push failed.'};}
+}
 async function ghBootPull(){
   try{
     const r=await ghPull({});
-    if(r&&r.adopted){if(typeof recomputeDerived==='function')recomputeDerived();reprice();
+    const rs=await ghPullSession({});
+    if((r&&r.adopted)||(rs&&rs.adopted)){
+      if(typeof recomputeDerived==='function')recomputeDerived();reprice();
       if(typeof rerenderAll==='function'){try{rerenderAll();}catch(e){}}
-      if(typeof renderArchive==='function')renderArchive();if(typeof renderSync==='function')renderSync();}
+      if(typeof renderArchive==='function')renderArchive();if(typeof renderSync==='function')renderSync();
+    }
   }catch(e){}
 }
 
