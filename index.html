@@ -2188,6 +2188,7 @@ function renderSync(){
   const stamp=ghStamp()?new Date(ghStamp()).toLocaleString():'never';
   el.innerHTML=`<div class="arch-row"><b>Sync</b><span class="arch-count">${c.owner}/${c.repo} \u00b7 ${c.branch}/${c.path} \u00b7 local saved ${stamp}</span></div>`
    +`<div class="arch-acts">`
+   +`<button class="sbtn" id="gh-reload" title="reload the page">\u21BB Reload</button>`
    +`<button class="sbtn" id="gh-pull">Pull from GitHub</button>`
    +`<button class="sbtn arch-primary" id="gh-push">Save to GitHub</button>`
    +`<input id="gh-token" type="password" placeholder="${c.token?'token saved \u2713':'paste PAT to enable saving'}" style="flex:1 1 180px;font:inherit;font-size:11px;padding:4px 6px;border:1px solid var(--line2);border-radius:5px">`
@@ -2195,6 +2196,7 @@ function renderSync(){
    +`</div><div id="gh-msg" class="arch-note"></div>`
    +`<div class="arch-note">Save &amp; Pull now cover <b>both</b> your season history and your live draft board. Pull needs nothing; saving needs a <b>fine-grained</b> token on <b>${c.owner}/${c.repo}</b>, Contents: read+write. During the live auction, draft on <b>one</b> device and Save before switching. This repo is public \u2014 both files are world-readable.</div>`;
   const msg=t=>{const m=$('#gh-msg');if(m)m.textContent=t;};
+  const rl=$('#gh-reload');if(rl)rl.addEventListener('click',()=>{try{if(typeof saveSession==='function')saveSession();}catch(e){}const u=location.href.split('#')[0];location.replace(u+(u.indexOf('?')>=0?'&':'?')+'r='+Date.now());});
   $('#gh-pull').addEventListener('click',async()=>{msg('Pulling\u2026');const r=await ghPull({force:true,confirm:true});const rs=await ghPullSession({force:true,confirm:true});
     msg('History: '+(r.ok?(r.adopted?'loaded':'current'):r.msg)+' \u00b7 Draft board: '+(rs.ok?(rs.adopted?'loaded':'current'):rs.msg));
     if(r.adopted||rs.adopted){if(typeof recomputeDerived==='function')recomputeDerived();reprice();if(typeof rerenderAll==='function'){try{rerenderAll();}catch(e){}}renderArchive();}});
