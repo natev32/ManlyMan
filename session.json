@@ -1,0 +1,489 @@
+{
+  "v": 1,
+  "mv": "{\"QB\":{\"repl\":212.8,\"eliteProd\":162,\"elite\":21,\"floor\":6.44,\"depth\":24,\"startPpg\":16.57},\"RB\":{\"repl\":91,\"eliteProd\":253.3,\"elite\":30.55,\"floor\":6.06,\"depth\":54,\"startPpg\":9.85},\"WR\":{\"repl\":128.7,\"eliteProd\":226.6,\"elite\":27.33,\"floor\":2.81,\"depth\":66,\"startPpg\":8.93},\"TE\":{\"repl\":94.6,\"eliteProd\":140,\"elite\":18.87,\"floor\":2.25,\"depth\":22,\"startPpg\":7.22},\"K\":{\"repl\":126.3,\"eliteProd\":28,\"elite\":3.33,\"floor\":0.5,\"depth\":16,\"startPpg\":7.55},\"DST\":{\"repl\":171.8,\"eliteProd\":61.9,\"elite\":5.67,\"floor\":0.5,\"depth\":16,\"startPpg\":10.15}}|{\"QB\":{\"heat\":0.7,\"elite\":1},\"RB\":{\"heat\":1,\"elite\":1.3},\"WR\":{\"heat\":1.16,\"elite\":1.42},\"TE\":{\"heat\":1.02,\"elite\":1.24},\"K\":{\"heat\":1,\"elite\":1},\"DST\":{\"heat\":1.3,\"elite\":1}}|{\"heat\":1,\"sens\":1,\"gamma\":0.85}",
+  "updatedAt": "2026-07-11T00:14:20.054Z",
+  "assign": {
+    "p46": {
+      "team": "Dickey Did It",
+      "cost": 8,
+      "contractYr": 1
+    },
+    "p47": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 3.75,
+      "contractYr": 1
+    },
+    "p50": {
+      "team": null,
+      "cost": null,
+      "contractYr": 2
+    },
+    "p58": {
+      "team": "Dirty Sanchez's",
+      "cost": 3.5,
+      "contractYr": 1
+    },
+    "p66": {
+      "team": "STUGOTS",
+      "cost": 2.25,
+      "contractYr": 1
+    },
+    "p75": {
+      "team": "Bzitch",
+      "cost": 2.25,
+      "contractYr": 1
+    },
+    "p85": {
+      "team": "PHILLY DILLY",
+      "cost": 7.5,
+      "contractYr": 1
+    },
+    "p120": {
+      "team": "I'm Back",
+      "cost": 1.25,
+      "contractYr": 1
+    },
+    "p150": {
+      "team": "Captain Ron",
+      "cost": 7,
+      "contractYr": 1
+    },
+    "p154": {
+      "team": "The Rookie",
+      "cost": 6.5,
+      "contractYr": 1
+    },
+    "p178": {
+      "team": "Beesnuts",
+      "cost": 6,
+      "contractYr": 1
+    },
+    "p234": {
+      "team": null,
+      "cost": null,
+      "contractYr": 2
+    },
+    "p427": {
+      "team": "PHILLY DILLY",
+      "cost": 5.5,
+      "contractYr": 1
+    }
+  },
+  "watch": [],
+  "myTeam": "PHILLY DILLY",
+  "sliders": {
+    "QB": {
+      "heat": 0.7,
+      "sens": 1,
+      "gamma": 0.85
+    },
+    "RB": {
+      "heat": 1,
+      "sens": 1,
+      "gamma": 0.85
+    },
+    "WR": {
+      "heat": 1.16,
+      "sens": 1,
+      "gamma": 0.85
+    },
+    "TE": {
+      "heat": 1.02,
+      "sens": 1,
+      "gamma": 0.85
+    },
+    "K": {
+      "heat": 1,
+      "sens": 1,
+      "gamma": 0.85
+    },
+    "DST": {
+      "heat": 1.3,
+      "sens": 1,
+      "gamma": 0.85
+    }
+  },
+  "marketScale": 1,
+  "marketFloor": 1,
+  "draftLog": [
+    {
+      "id": "p50",
+      "name": "A.J. Brown",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 20.5,
+      "action": "cut"
+    },
+    {
+      "id": "p47",
+      "name": "Denver Broncos",
+      "pos": "DST",
+      "team": "Nobody Beats the Wiz",
+      "cost": 3.75,
+      "prevTeam": "Nobody Beats the Wiz",
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p58",
+      "name": "Houston Texans",
+      "pos": "DST",
+      "team": "Dirty Sanchez's",
+      "cost": 3.5,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p66",
+      "name": "Seattle Seahawks",
+      "pos": "DST",
+      "team": "STUGOTS",
+      "cost": 2.25,
+      "prevTeam": "STUGOTS",
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p75",
+      "name": "Pittsburgh Steelers",
+      "pos": "DST",
+      "team": "Bzitch",
+      "cost": 2.25,
+      "prevTeam": "Bzitch",
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p120",
+      "name": "San Francisco 49ers",
+      "pos": "DST",
+      "team": "I'm Back",
+      "cost": 1.25,
+      "prevTeam": "I'm Back",
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p234",
+      "name": "AJ Barner",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 3.5,
+      "action": "cut"
+    },
+    {
+      "id": "p85",
+      "name": "Jadarian Price",
+      "pos": "RB",
+      "team": "PHILLY DILLY",
+      "cost": 7.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p46",
+      "name": "Jeremiyah Love",
+      "pos": "RB",
+      "team": "Dickey Did It",
+      "cost": 8,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p150",
+      "name": "Carnell Tate",
+      "pos": "WR",
+      "team": "Captain Ron",
+      "cost": 7,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p154",
+      "name": "Jordyn Tyson",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 6.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p203",
+      "name": "Kenyon Sadiq",
+      "pos": "TE",
+      "team": "Beesnuts",
+      "cost": 6,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p178",
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": "PHILLY DILLY",
+      "cost": 5.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p214",
+      "name": "KC Concepcion",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p235",
+      "name": "Antonio Williams",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 4.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p220",
+      "name": "Omar Cooper Jr.",
+      "pos": "WR",
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p232",
+      "name": "Denzel Boston",
+      "pos": "WR",
+      "team": "Goon Squad",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p76",
+      "name": "Fernando Mendoza",
+      "pos": "QB",
+      "team": "Dickey Did It",
+      "cost": 3,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p271",
+      "name": "Kaelon Black",
+      "pos": "RB",
+      "team": "PHILLY DILLY",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p275",
+      "name": "Mike Washington Jr.",
+      "pos": "RB",
+      "team": "Dickey Did It",
+      "cost": 2,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p244",
+      "name": "Germie Bernard",
+      "pos": "WR",
+      "team": "Captain Ron",
+      "cost": 1.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p427",
+      "name": "Jonah Coleman",
+      "pos": "RB",
+      "team": "Local #69",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p434",
+      "name": "Nicholas Singleton",
+      "pos": "RB",
+      "team": "Dirty Sanchez's",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p203",
+      "name": "Kenyon Sadiq",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Beesnuts",
+      "prevCost": 6,
+      "action": "cut"
+    },
+    {
+      "id": "p178",
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 5.5,
+      "action": "cut"
+    },
+    {
+      "id": "p178",
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": "Beesnuts",
+      "cost": 6,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p427",
+      "name": "Jonah Coleman",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Local #69",
+      "prevCost": 1,
+      "action": "cut"
+    },
+    {
+      "id": "p434",
+      "name": "Nicholas Singleton",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": 0.5,
+      "action": "cut"
+    },
+    {
+      "id": "p244",
+      "name": "Germie Bernard",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Captain Ron",
+      "prevCost": 1.5,
+      "action": "cut"
+    },
+    {
+      "id": "p275",
+      "name": "Mike Washington Jr.",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dickey Did It",
+      "prevCost": 2,
+      "action": "cut"
+    },
+    {
+      "id": "p271",
+      "name": "Kaelon Black",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 2.5,
+      "action": "cut"
+    },
+    {
+      "id": "p76",
+      "name": "Fernando Mendoza",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dickey Did It",
+      "prevCost": 3,
+      "action": "cut"
+    },
+    {
+      "id": "p232",
+      "name": "Denzel Boston",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Goon Squad",
+      "prevCost": 3.5,
+      "action": "cut"
+    },
+    {
+      "id": "p220",
+      "name": "Omar Cooper Jr.",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Mouth of Madden",
+      "prevCost": 4,
+      "action": "cut"
+    },
+    {
+      "id": "p235",
+      "name": "Antonio Williams",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 4.5,
+      "action": "cut"
+    },
+    {
+      "id": "p214",
+      "name": "KC Concepcion",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 5,
+      "action": "cut"
+    },
+    {
+      "id": "p427",
+      "name": "Jonah Coleman",
+      "pos": "RB",
+      "team": "PHILLY DILLY",
+      "cost": 5.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    }
+  ],
+  "rookiePicks": {
+    "1": "p46",
+    "2": "p85",
+    "3": "p150",
+    "4": "p154",
+    "5": "p178",
+    "6": "p427"
+  },
+  "adjusts": {}
+}
