@@ -528,6 +528,16 @@ input,textarea,select,[contenteditable]{caret-color:#111}
 .wk-sel{font:inherit;font-size:11px;padding:2px 4px;border:1px solid var(--line2);border-radius:5px;background:#fff;max-width:190px}
 .wk-cost{font:inherit;font-size:11px;padding:2px 4px;border:1px solid var(--line2);border-radius:5px}
 .arch-tbl select,.arch-tbl input{max-width:100%}
+
+.sync-dot{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:1px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--ink-dim);vertical-align:middle}
+.sync-pip{width:7px;height:7px;border-radius:50%;background:var(--ink-faint);flex:0 0 auto}
+.sync-dot.saved{color:#177245;border-color:#bfe3cc}.sync-dot.saved .sync-pip{background:#1ca35a}
+.sync-dot.pending,.sync-dot.offline{color:#9a6a00;border-color:#e8d8a8}.sync-dot.pending .sync-pip,.sync-dot.offline .sync-pip{background:#e0a800}
+.sync-dot.saving{color:#1462d6;border-color:#bcd4f5}.sync-dot.saving .sync-pip{background:#1462d6;animation:syncpulse 1s infinite}
+.sync-dot.error,.sync-dot.blocked{color:#c0392b;border-color:#e6b8b1}.sync-dot.error .sync-pip,.sync-dot.blocked .sync-pip{background:#c0392b}
+.sync-dot.idle{opacity:.6}
+@keyframes syncpulse{0%,100%{opacity:1}50%{opacity:.35}}
+.sync-auto{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--ink-dim);padding:0 4px}
 .arch-roll{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:9px;border-top:1px dashed var(--line2)}
 .arch-danger{border-color:#c0392b!important;color:#c0392b!important;font-weight:700}
 .arch-acts .sbtn[disabled],.arch-roll .sbtn[disabled]{opacity:.45;cursor:default;border-color:var(--line2)!important;color:var(--ink-faint)!important}
@@ -1633,7 +1643,8 @@ function saveSession(){try{
     const prev=localStorage.getItem('mmfl_war_room');
     if(prev){try{const pd=JSON.parse(prev);const prevBody=JSON.stringify(Object.assign({},pd,{updatedAt:0}));if(prevBody===bodyNow&&pd.updatedAt)d.updatedAt=pd.updatedAt;}catch(e){}}
     localStorage.setItem('mmfl_war_room',JSON.stringify(d));
-  }catch(e){} if(typeof refreshCardIfOpen==='function')refreshCardIfOpen();}
+  }catch(e){} if(typeof refreshCardIfOpen==='function')refreshCardIfOpen();
+  if(typeof scheduleAutosave==='function')scheduleAutosave();}
 function loadSession(){try{const r=localStorage.getItem('mmfl_war_room');if(r)applySession(JSON.parse(r));}catch(e){}}
 function reprice(){_assetFit=null;MASTER.forEach(m=>{m.anchor=priceOf(m,SLIDERS);m.valPerPt=(m.season>0?+(m.anchor/m.season).toFixed(3):null);});if(DATA.rookiePool)DATA.rookiePool.forEach(r=>{const mm=mById[r.id];if(mm)r.value=mm.anchor;});}
 function dlJSON(obj,name){try{const b=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e){}}
@@ -2182,11 +2193,60 @@ async function ghPush(){
     return {ok:true,msg:'Saved to '+c.owner+'/'+c.repo+'/'+c.path+' \u2713'};
   }catch(e){return {ok:false,msg:'Push failed: '+e.message};}
 }
+
+/* ---- auto-save: debounced push after edits, so you never rely on remembering ---- */
+let AUTOSAVE=true; try{AUTOSAVE=localStorage.getItem('mmfl_autosave')!=='0';}catch(e){}
+let _autosaveTimer=null,_autosaveState='idle';  /* idle | pending | saving | saved | error | offline | blocked */
+function _syncStatus(){
+  if(_sessConflict)return {k:'blocked',t:'conflict \u2014 resolve in Sync'};
+  const c=ghCfg();
+  if(!c.token)return _sessDirty()?{k:'offline',t:'unsaved (no token)'}:{k:'idle',t:'not saving'};
+  if(_autosaveState==='saving')return {k:'saving',t:'saving\u2026'};
+  if(_autosaveState==='error')return {k:'error',t:'save failed \u2014 retry'};
+  if(_sessDirty()||_autosaveState==='pending')return {k:'pending',t:'unsaved changes'};
+  return {k:'saved',t:'all changes saved'};
+}
+function renderSyncDot(){
+  const el=$('#sync-dot');if(!el)return;
+  const s=_syncStatus();
+  el.className='sync-dot '+s.k;el.title=s.t;
+  el.innerHTML=`<span class="sync-pip"></span><span class="sync-lbl">${s.t}</span>`;
+}
+function scheduleAutosave(){
+  renderSyncDot();
+  if(!AUTOSAVE)return;
+  const c=ghCfg();if(!c.token)return;         /* nothing to push to */
+  if(_sessConflict)return;                     /* never auto-overwrite a flagged newer repo board */
+  if(_autosaveState!=='saving')_autosaveState='pending';
+  if(_autosaveTimer)clearTimeout(_autosaveTimer);
+  _autosaveTimer=setTimeout(runAutosave,10000);/* 10s after the last change */
+  renderSyncDot();
+}
+async function runAutosave(){
+  _autosaveTimer=null;
+  const c=ghCfg();
+  if(!AUTOSAVE||!c.token||_sessConflict){renderSyncDot();return;}
+  if(!_sessDirty()){_autosaveState='saved';renderSyncDot();return;}
+  _autosaveState='saving';renderSyncDot();
+  try{
+    const r=await ghPushSession();
+    if(r&&r.ok){_autosaveState='saved';}
+    else if(r&&/newer/i.test(r.msg||'')){_autosaveState='idle';}  /* push guarded; leave for manual resolve */
+    else{_autosaveState='error';}
+  }catch(e){_autosaveState='error';}
+  renderSyncDot();
+  if(typeof renderSync==='function')renderSync();
+}
+function markEdited(){                          /* call after any board mutation */
+  if(_autosaveState==='saved'||_autosaveState==='idle')_autosaveState='pending';
+  scheduleAutosave();
+}
+
 function renderSync(){
   const el=$('#gh-body');if(!el||!archReady())return;
   const c=ghCfg();
   const stamp=ghStamp()?new Date(ghStamp()).toLocaleString():'never';
-  el.innerHTML=`<div class="arch-row"><b>Sync</b><span class="arch-count">${c.owner}/${c.repo} \u00b7 ${c.branch}/${c.path} \u00b7 local saved ${stamp}</span></div>`
+  el.innerHTML=`<div class="arch-row"><b>Sync</b> <span id="sync-dot" class="sync-dot"></span><span class="arch-count">${c.owner}/${c.repo} \u00b7 ${c.branch}/${c.path} \u00b7 local saved ${stamp}</span></div>`
    +`<div class="arch-acts">`
    +`<button class="sbtn" id="gh-reload" title="reload the page">\u21BB Reload</button>`
    +`<button class="sbtn" id="gh-pull">Pull from GitHub</button>`
@@ -2201,6 +2261,8 @@ function renderSync(){
     msg('History: '+(r.ok?(r.adopted?'loaded':'current'):r.msg)+' \u00b7 Draft board: '+(rs.ok?(rs.adopted?'loaded':'current'):rs.msg));
     if(r.adopted||rs.adopted){if(typeof recomputeDerived==='function')recomputeDerived();reprice();if(typeof rerenderAll==='function'){try{rerenderAll();}catch(e){}}renderArchive();}});
   $('#gh-push').addEventListener('click',async()=>{msg('Saving\u2026');const r=await ghPush();const rs=await ghPushSession();msg('History: '+(r.ok?'\u2713':r.msg)+' \u00b7 Draft board: '+(rs.ok?'\u2713':rs.msg));renderSync();});
+  const ga=$('#gh-auto');if(ga)ga.addEventListener('change',()=>{AUTOSAVE=ga.checked;try{localStorage.setItem('mmfl_autosave',AUTOSAVE?'1':'0');}catch(e){}if(AUTOSAVE&&_sessDirty())scheduleAutosave();renderSyncDot();});
+  if(typeof renderSyncDot==='function')renderSyncDot();
   $('#gh-tok').addEventListener('click',()=>{const v=$('#gh-token').value.trim();const cc=ghCfg();cc.token=v;ghSaveCfg(cc);renderSync();
     const m=$('#gh-msg');if(m)m.textContent=v?'Token saved to this browser.':'Token cleared.';});
 }
@@ -2598,6 +2660,7 @@ function renderArchive(){
    +(isDone?`<button class="sbtn" id="arch-undo">Undo ${cur}</button>`:'')
    +`<button class="sbtn" id="arch-json">Export archive (JSON)</button>`
    +`<button class="sbtn" id="arch-csv">Export auction costs (CSV)</button>`
+   +`<label class="sync-auto"><input type="checkbox" id="gh-auto"${AUTOSAVE?' checked':''}> auto-save</label>`
    +`<label class="sbtn" for="arch-file">Load archive</label><input id="arch-file" type="file" accept="application/json" style="display:none">`
    +`</div>`
    +(()=>{const blocked=!!(S&&S.locked)||!!(S&&S.fromRollover&&!S.manualSubmit);const lbl=(S&&S.locked)?('Season '+yr+' locked'):((S&&S.fromRollover&&!S.manualSubmit)?'Submit rosters first':('Advance to '+(+yr+1)));return `<div class="arch-roll"><button class="sbtn" id="arch-pv">Preview next season</button><button class="sbtn arch-danger" id="arch-roll"${blocked?' disabled':''}>${lbl}</button></div>`;})()
@@ -2618,6 +2681,7 @@ function renderArchive(){
   if(typeof renderWeekly==='function'){try{renderWeekly();}catch(e){}}
   if(typeof renderReport==='function'){try{renderReport();}catch(e){}}
   if(typeof renderSync==='function'){try{renderSync();}catch(e){}}
+  if(typeof renderSyncDot==='function'){try{renderSyncDot();}catch(e){}}
   const br=$('#arch-roll');if(br&&!br.disabled)br.addEventListener('click',rolloverConfirm);
   const af=$('#arch-file');if(af)af.addEventListener('change',e=>{if(e.target.files[0])archImportFile(e.target.files[0]);e.target.value='';});
   el.querySelectorAll('.arch-chip').forEach(c=>c.addEventListener('click',()=>{
