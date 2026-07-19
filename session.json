@@ -1,7 +1,7 @@
 {
   "v": 1,
   "mv": "{\"QB\":{\"repl\":212.8,\"eliteProd\":162,\"elite\":21,\"floor\":6.44,\"depth\":24,\"startPpg\":16.57},\"RB\":{\"repl\":91,\"eliteProd\":253.3,\"elite\":30.55,\"floor\":6.06,\"depth\":54,\"startPpg\":9.85},\"WR\":{\"repl\":128.7,\"eliteProd\":226.6,\"elite\":27.33,\"floor\":2.81,\"depth\":66,\"startPpg\":8.93},\"TE\":{\"repl\":94.6,\"eliteProd\":140,\"elite\":18.87,\"floor\":2.25,\"depth\":22,\"startPpg\":7.22},\"K\":{\"repl\":126.3,\"eliteProd\":28,\"elite\":3.33,\"floor\":0.5,\"depth\":16,\"startPpg\":7.55},\"DST\":{\"repl\":171.8,\"eliteProd\":61.9,\"elite\":5.67,\"floor\":0.5,\"depth\":16,\"startPpg\":10.15}}|{\"QB\":{\"heat\":0.7,\"elite\":1},\"RB\":{\"heat\":1,\"elite\":1.3},\"WR\":{\"heat\":1.16,\"elite\":1.42},\"TE\":{\"heat\":1.02,\"elite\":1.24},\"K\":{\"heat\":1,\"elite\":1},\"DST\":{\"heat\":1.3,\"elite\":1}}|{\"heat\":1,\"sens\":1,\"gamma\":0.85}",
-  "updatedAt": "2026-07-11T00:14:20.054Z",
+  "updatedAt": "2026-07-19T23:03:05.686Z",
   "assign": {
     "p46": {
       "team": "Dickey Did It",
@@ -73,7 +73,7 @@
   "myTeam": "PHILLY DILLY",
   "sliders": {
     "QB": {
-      "heat": 0.7,
+      "heat": 0.95,
       "sens": 1,
       "gamma": 0.85
     },
@@ -485,5 +485,27 @@
     "5": "p178",
     "6": "p427"
   },
-  "adjusts": {}
+  "adjusts": {
+    "p106": {
+      "ppg": 10.26,
+      "season": 174.5,
+      "stats": {
+        "rec": 85.3,
+        "recYd": 950,
+        "recTD": 5.6
+      }
+    },
+    "p157": {
+      "ppg": 8.07,
+      "season": 137.2,
+      "stats": {
+        "rec": 55.5,
+        "recYd": 848.5,
+        "recTD": 5.5,
+        "ruAtt": 4,
+        "ruYd": 27.1,
+        "ruTD": 0.6
+      }
+    }
+  }
 }
