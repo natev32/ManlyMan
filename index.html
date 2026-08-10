@@ -678,13 +678,14 @@ input,textarea,select,[contenteditable]{caret-color:#111}
   </section>
   <section class="view" id="v-draft">
     <div class="card">
-      <div class="card-h"><h2>League Rosters</h2><span class="hint" id="boardcount"></span><div class="dio"><button class="diobtn" id="exp-rosters">↑ Export</button><label class="diobtn" for="imp-rosters">↓ Import</label><input type="file" id="imp-rosters" accept=".csv,text/csv" hidden></div></div>
+      <div class="card-h"><h2>Players</h2><span class="hint" id="boardcount"></span><div class="dio"><button class="diobtn" id="exp-rosters">↑ Export</button><label class="diobtn" for="imp-rosters">↓ Import players</label><input type="file" id="imp-rosters" accept=".csv,text/csv" hidden></div></div>
       <div class="filters">
         <button class="pos-btn on" data-pos="ALL">All</button><button class="pos-btn" data-pos="QB">QB</button>
         <button class="pos-btn" data-pos="RB">RB</button><button class="pos-btn" data-pos="WR">WR</button>
         <button class="pos-btn" data-pos="TE">TE</button><button class="pos-btn" data-pos="K">K</button>
         <button class="pos-btn" data-pos="DST">DST</button>
         <select id="teamfilter" class="rooksel" style="max-width:210px;margin-left:4px"></select>
+        <div id="rim-preview" style="flex-basis:100%"></div>
         <div class="search">&#128269;<input id="q" placeholder="Search player..."/></div>
       </div>
       <div class="tbl-scroll"><table id="board"><thead><tr>
@@ -1190,7 +1191,8 @@ MASTER.forEach(m=>{const _sl=(typeof STATLINES!=='undefined')&&STATLINES[(m.name
 /* ---------- DRAFT BOARD (sandbox bid planner) ---------- */
 let posFilter='ALL',sortKey='assetScore',sortDir=-1,query='',teamFilter='ALL';
 function boardData(){
-  let p=MASTER.filter(x=>x.team);
+  let p=MASTER.filter(x=>x.season!=null);
+  if(teamFilter==='__FA__')p=p.filter(x=>!x.team);
   if(posFilter!=='ALL')p=p.filter(x=>x.pos===posFilter);
   if(teamFilter!=='ALL')p=p.filter(x=>x.team===teamFilter);
   if(query){const q=query.toLowerCase();p=p.filter(x=>x.name.toLowerCase().includes(q)||(x.nfl||'').toLowerCase().includes(q));}
@@ -1227,7 +1229,7 @@ document.querySelectorAll('#v-draft .pos-btn').forEach(b=>b.onclick=()=>{documen
 $('#q').oninput=e=>{query=e.target.value;renderBoard();};
 document.querySelectorAll('#board thead th[data-s]').forEach(th=>th.onclick=()=>{const k=th.dataset.s;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='name')?1:-1;}document.querySelectorAll('#board thead th .ar').forEach(a=>a.remove());const ar=document.createElement('span');ar.className='ar';ar.textContent=sortDir<0?' \u25BC':' \u25B2';th.appendChild(ar);renderBoard();});
 $('#rows').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)sqAdd(decodeURIComponent(b.dataset.add));});
-(function(){const sel=$('#teamfilter');if(sel){sel.innerHTML='<option value="ALL">All teams</option>'+TEAMS.slice().sort().map(t=>'<option value="'+t+'">'+t+'</option>').join('');sel.addEventListener('change',()=>{teamFilter=sel.value;renderBoard();});}})();
+(function(){const sel=$('#teamfilter');if(sel){sel.innerHTML='<option value="ALL">All teams</option><option value="__FA__">Free Agents</option>'+TEAMS.slice().sort().map(t=>'<option value="'+t+'">'+t+'</option>').join('');sel.addEventListener('change',()=>{teamFilter=sel.value;renderBoard();});}})();
 const SLOTDEF=[['QB','QB'],['RB','RB'],['RB','RB'],['WR','WR'],['WR','WR'],['TE','TE'],['K','K'],['DST','DST']];
 const byName=n=>DATA.players.find(x=>x.name===n);
 function sqAdd(name){if(sqHas(name))return;const p=byName(name);if(!p)return;const used=SQUAD.filter(r=>r.starter).map(r=>r.slotIdx);let placed=false;for(let i=0;i<SLOTDEF.length;i++){if(SLOTDEF[i][0]===p.pos&&!used.includes(i)){SQUAD.push({p,price:p.anchor,starter:true,slotIdx:i});placed=true;break;}}if(!placed){if(SQUAD.filter(r=>!r.starter).length>=8)return;SQUAD.push({p,price:p.anchor,starter:false,slotIdx:null});}sqRender();}
@@ -2743,13 +2745,102 @@ function exportRosters(){
   dlCSV(toCSV(rows,['player','pos','team','salary','contractYr']),'mmfl_rosters_'+leagueSeason()+'.csv');
 }
 function applyRosterData(rosters){
-  const byName={};MASTER.forEach(m=>{byName[m.name.toLowerCase().trim()]=m;});
+  const byName={};MASTER.forEach(m=>{byName[statNorm(m.name)]=m;});
   MASTER.forEach(m=>{m.team=null;m.cost=null;});
   let matched=0;const unmatched=[];
-  rosters.forEach(r=>{const m=byName[String(r.player||'').toLowerCase().trim()];
+  rosters.forEach(r=>{const m=byName[statNorm(String(r.player||''))];
     if(m){m.team=r.team;m.cost=(r.salary!=null&&r.salary!==''?+r.salary:null);if(r.contractYr)m.contractYr=+r.contractYr;matched++;}else unmatched.push(r.player);});
   return {matched,unmatched};
 }
+
+/* ================= UNIFIED PLAYERS IMPORT (whole-league roster/ownership) =================
+   Accepts EITHER the native league site export (auto-detected, ownership only -- salary is
+   preserved for anyone who stays rostered) OR the app's own simple rosters CSV (player,pos,
+   team,salary,contractYr -- authoritative for salary too, matching the original behavior).
+   Anyone NOT present in the import becomes a free agent. Always previewed before it touches
+   a single team, since this can move every roster in the league at once. */
+let _rimPreview=null, _rimRows=null, _rimFormat=null;
+
+function _rimParse(text){
+  if(looksLikeLeagueExport(text)){
+    const p=parseLeagueExport(text);
+    if(!p.ok)return {ok:false,msg:'Could not read that file.'};
+    const seen={},rows=[];
+    p.rows.forEach(r=>{if(r.player&&!seen[r.player]){seen[r.player]=1;rows.push({player:r.player,team:r.owner||null});}});
+    return {ok:true,rows,format:'native'};
+  }
+  const csv=parseCSV(text);
+  if(!csv.length)return {ok:false,msg:'That file has no rows.'};
+  if(!('player' in csv[0]))return {ok:false,msg:'Expected a "player" column. Use Export first to see the format, or upload a league site export.'};
+  const rows=csv.map(r=>({player:r.player,team:r.team||null,salary:(r.salary!=null&&r.salary!==''?+r.salary:null),contractYr:r.contractYr?+r.contractYr:null}));
+  return {ok:true,rows,format:'simple'};
+}
+function _rimBuildPreview(rows){
+  const ix=archNameIndex();
+  const matched=[],unmatched=[];
+  rows.forEach(r=>{const id=ix[statNorm(r.player)];const m=id?mById[id]:null;if(m)matched.push({row:r,m});else unmatched.push(r.player);});
+  const matchedIds=new Set(matched.map(x=>x.m.id));
+  const cut=[],moved=[],added=[];
+  MASTER.forEach(m=>{
+    if(m.season==null)return;
+    const wasRostered=!!m.team;
+    const nowMatched=matchedIds.has(m.id);
+    const newTeam=nowMatched?(matched.find(x=>x.m.id===m.id).row.team||null):null;
+    if(wasRostered&&!newTeam)cut.push(m);
+    else if(!wasRostered&&newTeam)added.push({m,team:newTeam});
+    else if(wasRostered&&newTeam&&newTeam!==m.team)moved.push({m,from:m.team,to:newTeam});
+  });
+  return {matched,unmatched,cut,moved,added,totalRows:rows.length};
+}
+function rimHandleFile(file){
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      const p=_rimParse(fr.result);
+      if(!p.ok){alert(p.msg);return;}
+      _rimRows=p.rows; _rimFormat=p.format;
+      _rimPreview=_rimBuildPreview(p.rows);
+      renderRimPreview();
+    }catch(e){alert('Could not read that file.');}
+  };
+  fr.readAsText(file);
+}
+function renderRimPreview(){
+  const el=$('#rim-preview'); if(!el)return;
+  if(!_rimPreview){el.innerHTML='';return;}
+  const p=_rimPreview;
+  const fmtName=x=>x.m?x.m.name:x;
+  let h=`<div class="arch-pv"><b>${_rimFormat==='native'?'League export':'Rosters CSV'} detected</b> \u00b7 ${p.totalRows} rows \u00b7 ${p.matched.length} matched`
+   +(p.unmatched.length?` \u00b7 <span style="color:#c0392b">${p.unmatched.length} unmatched</span>`:'')
+   +`<div class="arch-note">`
+   +`<b>${p.cut.length}</b> cut to free agency`+(p.cut.length?': '+p.cut.slice(0,8).map(m=>m.name).join(', ')+(p.cut.length>8?'\u2026':''):'')+`<br>`
+   +`<b>${p.moved.length}</b> changed teams`+(p.moved.length?': '+p.moved.slice(0,8).map(x=>x.m.name+' ('+x.from+'\u2192'+x.to+')').join(', ')+(p.moved.length>8?'\u2026':''):'')+`<br>`
+   +`<b>${p.added.length}</b> newly rostered (were free agents)`+(p.added.length?': '+p.added.slice(0,6).map(x=>x.m.name).join(', ')+(p.added.length>6?'\u2026':''):'')
+   +(p.unmatched.length?`<br><span style="color:#c0392b">Unmatched</span>: ${p.unmatched.slice(0,10).join(', ')}${p.unmatched.length>10?'\u2026':''}`:'')
+   +(_rimFormat==='native'?`<br><i>League export has no salary data \u2014 existing salaries are kept for anyone who stays rostered.</i>`:'')
+   +`</div><div class="arch-acts" style="margin-top:8px"><button class="sbtn arch-primary" id="rim-commit">Apply to all 16 teams</button><button class="sbtn" id="rim-cancel">Cancel</button></div></div>`;
+  el.innerHTML=h;
+  $('#rim-commit').addEventListener('click',rimCommit);
+  $('#rim-cancel').addEventListener('click',()=>{_rimPreview=null;_rimRows=null;renderRimPreview();});
+}
+function rimCommit(){
+  if(!_rimRows||!_rimPreview)return;
+  const p=_rimPreview;
+  if(!confirm('This updates all 16 teams: '+p.cut.length+' cut to free agency, '+p.moved.length+' change teams, '+p.added.length+' newly rostered. Continue?'))return;
+  if(_rimFormat==='simple'){
+    applyRosterData(_rimRows);   // existing behavior: authoritative for team+salary+contractYr
+  } else {
+    const ix=archNameIndex();
+    const matchedIds=new Set();
+    _rimRows.forEach(r=>{const id=ix[statNorm(r.player)];const m=id?mById[id]:null;if(m){matchedIds.add(m.id);m.team=r.team||null;}});
+    MASTER.forEach(m=>{if(m.season==null)return;if(!matchedIds.has(m.id)){m.team=null;m.cost=null;m.contractYr=null;}});
+  }
+  try{localStorage.removeItem('mmfl_war_room');}catch(e){}
+  _rimPreview=null;_rimRows=null;_rimFormat=null;
+  rebaseline();reprice();rerenderAll();renderRimPreview();
+  alert('Players updated.');
+}
+
 function importRosters(file){const fr=new FileReader();fr.onload=function(){try{
   const rosters=parseCSV(fr.result);if(!rosters.length)throw 0;
   const res=applyRosterData(rosters);
@@ -2838,7 +2929,7 @@ function wireDataIO(){
   const bind=(id,fn)=>{const el=$('#'+id);if(el)el.addEventListener('click',fn);};
   bind('exp-rosters',exportRosters);bind('exp-rookies',exportDraftOrder);bind('exp-proj',exportProjections);
   const fileb=(id,fn)=>{const el=$('#'+id);if(el)el.addEventListener('change',e=>{if(e.target.files&&e.target.files[0])fn(e.target.files[0]);e.target.value='';});};
-  fileb('imp-rosters',importRosters);fileb('imp-rookies',importDraftOrder);fileb('imp-proj',importProjections);
+  fileb('imp-rosters',rimHandleFile);fileb('imp-rookies',importDraftOrder);fileb('imp-proj',importProjections);
 }
 function _bkTs(){const d=new Date();const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes());}function fullBackup(){try{const lg={};try{['mmfl_league_rosters','mmfl_pick_owners','mmfl_league_projections'].forEach(k=>{const v=localStorage.getItem(k);if(v!=null)lg[k]=v;});}catch(e){}const payload={kind:'mmfl_backup',v:2,savedAt:new Date().toISOString(),season:(typeof leagueSeason==='function'?leagueSeason():null),session:sessionData(),league:lg};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mmfl_backup_'+_bkTs()+'.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);return true;}catch(e){return false;}}function restoreBackup(file){if(!confirm('Restore from this backup? This replaces your current draft session and league data in this browser.'))return;const fr=new FileReader();fr.onload=function(){try{const data=JSON.parse(fr.result);if(data&&data.kind==='mmfl_backup'){try{if(data.league){for(const k in data.league){if(data.league[k]!=null)localStorage.setItem(k,data.league[k]);}}}catch(e){}try{localStorage.setItem('mmfl_war_room',JSON.stringify(data.session||{}));}catch(e){}location.reload();return;}applySession(data);reprice();if(typeof loadSliders==='function')loadSliders();sqRender();renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();renderRookie();saveSession();}catch(e){alert('Could not read that backup file.');}};fr.readAsText(file);}
 function exportSession(){try{const blob=new Blob([JSON.stringify(sessionData(),null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mmfl_draft_session.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e){}}
@@ -2846,7 +2937,7 @@ function importSession(file){const fr=new FileReader();fr.onload=function(){try{
 document.addEventListener('click',function(e){const w=e.target.closest&&e.target.closest('[data-watch]');if(w){const id=w.dataset.watch;if(watchSet.has(id))watchSet.delete(id);else watchSet.add(id);saveSession();renderAuction();renderBoard();}});
 
 /* ---------- NAV ---------- */
-const GROUPS={me:[{v:'cockpit',label:'My Team'}],pool:[{v:'auction',label:'Auction'},{v:'rookie',label:'Rookies'}],league:[{v:'power',label:'Power'},{v:'budgets',label:'Budgets'},{v:'record',label:'Records'},{v:'draft',label:'Rosters'},{v:'trade',label:'Trade'},{v:'cap',label:'Cap Sheet'},{v:'bench',label:'History'}]};
+const GROUPS={me:[{v:'cockpit',label:'My Team'}],pool:[{v:'auction',label:'Auction'},{v:'rookie',label:'Rookies'}],league:[{v:'power',label:'Power'},{v:'budgets',label:'Budgets'},{v:'record',label:'Records'},{v:'draft',label:'Players'},{v:'trade',label:'Trade'},{v:'cap',label:'Cap Sheet'},{v:'bench',label:'History'}]};
 let activeGroup='me',activeView='cockpit';const lastView={me:'cockpit',pool:'auction',league:'power'};
 function showView(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));const el=$('#v-'+v);if(el)el.classList.add('on');activeView=v;if(v==='auction'&&typeof renderAuction==='function')renderAuction();if(v==='trade'&&typeof renderTrade==='function')renderTrade();if(v==='record'&&typeof renderRecords==='function')renderRecords();if(v==='cockpit'&&typeof renderArchive==='function'){try{renderArchive();}catch(e){}}}
 function renderSubnav(){const items=GROUPS[activeGroup]||[];const sn=$('#subnav'),sw=$('#subwrap');if(!sn)return;if(items.length<=1){sn.innerHTML='';if(sw)sw.style.display='none';return;}if(sw)sw.style.display='';sn.innerHTML=items.map(it=>`<button class="${it.v===activeView?'on':''}" data-v="${it.v}">${it.label}</button>`).join('');sn.querySelectorAll('button').forEach(b=>b.onclick=()=>{lastView[activeGroup]=b.dataset.v;showView(b.dataset.v);sn.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));window.scrollTo(0,0);});}
