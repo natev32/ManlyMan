@@ -538,6 +538,14 @@ input,textarea,select,[contenteditable]{caret-color:#111}
 .sync-dot.idle{opacity:.6}
 @keyframes syncpulse{0%,100%{opacity:1}50%{opacity:.35}}
 .sync-auto{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--ink-dim);padding:0 4px}
+
+
+.appconfirm-ov{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+.appconfirm-box{background:#fff;border-radius:12px;max-width:420px;width:100%;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.appconfirm-msg{font-size:14px;line-height:1.5;color:var(--ink);white-space:normal}
+.appconfirm-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.ttag{display:inline-block;font-size:10px;font-weight:700;color:#9a6a00;background:#fff3d6;border:1px solid #e8d8a8;border-radius:999px;padding:1px 6px;margin-left:4px;vertical-align:middle}
+.sd-pv{border-color:#e8d8a8!important;background:#fffaf0}
 .arch-roll{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:9px;border-top:1px dashed var(--line2)}
 .arch-danger{border-color:#c0392b!important;color:#c0392b!important;font-weight:700}
 .arch-acts .sbtn[disabled],.arch-roll .sbtn[disabled]{opacity:.45;cursor:default;border-color:var(--line2)!important;color:var(--ink-faint)!important}
@@ -721,6 +729,7 @@ input,textarea,select,[contenteditable]{caret-color:#111}
   <!-- AUCTION -->
   <section class="view" id="v-auction">
     <div class="section-h">Auction <span class="accent">Pool</span></div>
+    <div id="sd-bar"></div>
     <div class="warbar" id="auc-warbar"><div class="wb-hud" id="wb-hud"></div><div class="wb-block"><div class="wb-search-wrap"><span class="wb-blab">On the block</span><input id="wb-search" list="wb-dl" placeholder="type a player&hellip;" autocomplete="off"><datalist id="wb-dl"></datalist></div><div class="wb-analysis" id="wb-analysis"></div></div></div>
     <p class="intro">Players not on a roster. <b>Value&nbsp;$</b> = fair value &middot; <b>Live&nbsp;$</b> = expected spend &middot; <b>Last&nbsp;$</b> = last year.</p>
     <div class="vctrl">
@@ -1242,6 +1251,27 @@ function sqRender(){renderBoard();}
 
 /* ---------- AUCTION ---------- */
 let aPos='ALL',aQuery='',aSort='season',aDir=-1,aEdit=null,aEditVal=0; let onBlockId=null;
+
+/* ---- "Start Draft": release still-pending transition-tagged players into the pool at once ---- */
+function pendingTransitions(){ return MASTER.filter(m=>m.transitionTag&&m.team); }
+function renderStartDraftBar(){
+  const el=$('#sd-bar'); if(!el)return;
+  const pend=pendingTransitions();
+  if(!pend.length){el.innerHTML='';return;}
+  el.innerHTML=`<div class="arch-pv sd-pv"><b>${pend.length} player${pend.length===1?'':'s'} still transition-tagged</b> \u2014 their owner could still franchise them instead of letting them hit the pool.`
+   +`<div class="arch-note">${pend.map(m=>m.name+' ('+m.team+', $'+fmt(m.transitionPrice,2)+')').slice(0,10).join(', ')}${pend.length>10?'\u2026':''}</div>`
+   +`<div class="arch-acts" style="margin-top:8px"><button class="sbtn arch-danger" id="sd-start">Start Draft \u2014 release to pool</button></div></div>`;
+  $('#sd-start').addEventListener('click',startDraftRelease);
+}
+async function startDraftRelease(){
+  const pend=pendingTransitions();
+  if(!pend.length)return;
+  if(!(await appConfirm('Release '+pend.length+' transition-tagged player'+(pend.length===1?'':'s')+' to the auction pool at their T-tag price?\n\n'+pend.map(m=>m.name+' ('+m.team+')').join('\n'))))return;
+  pend.forEach(m=>{ m.team=null; m.cost=null; m.contractYr=null; });   /* transitionTag/transitionPrice stay on the player for the pool badge */
+  rebaseline();reprice();rerenderAll();renderStartDraftBar();
+  alert(pend.length+' player'+(pend.length===1?'':'s')+' released to the pool.');
+}
+
 function poolData(){let p=MASTER.filter(m=>!m.team);if(aWatch)p=p.filter(m=>watchSet.has(m.id));if(aPos!=='ALL')p=p.filter(m=>m.pos===aPos);if(aQuery){const q=aQuery.toLowerCase();p=p.filter(m=>m.name.toLowerCase().includes(q)||(m.nfl||'').toLowerCase().includes(q));}return p.sort((a,b)=>{let av=a[aSort],bv=b[aSort];if(aSort==='name')return aDir*((av>bv)-(av<bv));av=av==null?-1e9:av;bv=bv==null?-1e9:bv;return aDir*(av-bv);});}
 
 function setStickyOffset(){try{const h=document.querySelector('header');if(h)document.documentElement.style.setProperty('--hh',(h.offsetHeight)+'px');}catch(e){}}
@@ -1400,12 +1430,12 @@ function renderTrade(){
   const em=$('#tr-emph');if(em)em.value=trEmphasis;const emv=$('#tr-emph-v');if(emv)emv.textContent=trEmphasis.toFixed(1)+'\u00d7';
   const ex=$('#tr-exec');if(ex)ex.disabled=!_trdCanExec;
 }
-function executeTrade(){
+async function executeTrade(){
   const Sa=Array.from(trSelA).map(function(id){return mById[id];}).filter(Boolean);
   const Sb=Array.from(trSelB).map(function(id){return mById[id];}).filter(Boolean);
   if(!Sa.length&&!Sb.length)return;
   if(!_trdCanExec){alert('This trade is illegal as-is \u2014 fix the flagged issues first.');return;}
-  if(!confirm('Execute trade?\n\n'+trTeamA+' sends: '+(Sa.map(function(p){return p.name;}).join(', ')||'nobody')+'\n'+trTeamB+' sends: '+(Sb.map(function(p){return p.name;}).join(', ')||'nobody')))return;
+  if(!(await appConfirm('Execute trade?\n\n'+trTeamA+' sends: '+(Sa.map(function(p){return p.name;}).join(', ')||'nobody')+'\n'+trTeamB+' sends: '+(Sb.map(function(p){return p.name;}).join(', ')||'nobody'))))return;
   Sa.forEach(function(p){draftLog.push({id:p.id,name:p.name,pos:p.pos,team:trTeamB,cost:p.cost,prevTeam:p.team,prevCost:p.cost,action:'trade'});p.team=trTeamB;});
   Sb.forEach(function(p){draftLog.push({id:p.id,name:p.name,pos:p.pos,team:trTeamA,cost:p.cost,prevTeam:p.team,prevCost:p.cost,action:'trade'});p.team=trTeamA;});
   trSelA.clear();trSelB.clear();
@@ -1426,6 +1456,7 @@ function wireTrade(){
 }
 
 function renderAuction(){
+  if(typeof renderStartDraftBar==='function')renderStartDraftBar();
   const d=poolData();$('#auccount').textContent=d.length+' available';
   if(typeof renderHud==='function'){renderHud();refreshBlockList();}
   const INFL=inflationRate();renderInflBanner(INFL);const INFLP=inflationByPos();renderInflPos(INFLP);
@@ -1445,7 +1476,7 @@ function renderAuction(){
       expand=`<tr class="auc-exp"><td colspan="9"><div class="expbox"><div class="exp-vals"><span class="ev"><i>Proj</i>${fmt(m.season)}</span><span class="ev"><i>PPG</i>${fmt(m.ppg,1)}</span><span class="ev"><i>VOR</i>${m.vor==null?'—':(m.vor>0?'+':'')+fmt(m.vor)}</span><span class="ev"><i>Value</i>$${fmt(m.anchor,2)}</span><span class="ev amber"><i>Live</i>$${_lv}</span><span class="ev"><i>Last</i>${m.lastSal!=null?('$'+fmt(m.lastSal,2)):'—'}</span></div><div class="exp-form"><span class="ci"><span>$</span><input id="ac-cost" type="number" step="0.25" min="0.25" value="${r25(Math.max(0.25,m.anchor*(INFLP[m.pos]||INFL)))}"/></span><span id="ac-grade" class="grade" style="color:#5b9bd5;border:1px solid #5b9bd555">B</span><select id="ac-team">${teamOpts}</select><button class="ok" data-confirm="${m.id}">Draft ✓</button><button class="no" data-cancel="1">Cancel</button></div></div></td></tr>`;
     }
     return pre+`<tr class="${_cls.trim()}">
-      <td class="l"><span class="wstar ${watchSet.has(m.id)?'on':''}" data-watch="${m.id}">\u2605</span> <span class="pname pclick" data-pid="${m.id}">${m.name}</span> <span class="pmeta">${m.nfl||''}</span></td>
+      <td class="l"><span class="wstar ${watchSet.has(m.id)?'on':''}" data-watch="${m.id}">\u2605</span> <span class="pname pclick" data-pid="${m.id}">${m.name}</span> <span class="pmeta">${m.nfl||''}</span>${m.transitionTag?` <span class="ttag" title="Transition-tag reference price">T $${fmt(m.transitionPrice,2)}</span>`:''}</td>
       <td>${m.availRank?`<span class="pos-tag ${m.pos}">${m.pos}${m.availRank}</span>`:`<span class="pos-tag ${m.pos}">${m.pos}</span>`}</td>
       <td class="proj">${fmt(m.season)}</td><td class="mono" style="color:var(--ink-dim)">${fmt(m.ppg,1)}</td>
       <td class="vor" style="color:${m.vor==null?'var(--ink-faint)':vorColor(m.vor,m.pos)}">${m.vor==null?'\u2014':(m.vor>0?'+':'')+fmt(m.vor)}</td>
@@ -1883,7 +1914,7 @@ function archProgressStats(yr){
   });
   return n;
 }
-function rolloverConfirm(){
+async function rolloverConfirm(){
   const pv=rolloverPreview();
   const S=archSeason();
   if(S.locked){alert('Season '+pv.season+' has already been rolled over.');return;}
@@ -1894,8 +1925,8 @@ function rolloverConfirm(){
    +'\u2022 '+pv.escalated.length+' contracts escalate (e.g. '+escTop+')\n'
    +'\u2022 '+pv.released.length+' finish Yr4 and are released to the auction pool'+(relTop?(' (e.g. '+relTop+')'):'')+'\n\n'
    +'Season '+pv.season+' will be archived and locked. Export your archive first \u2014 this cannot be undone in-app.';
-  if(!confirm(msg))return;
-  if(!confirm('Last check: this rewrites every salary. Have you exported the archive?'))return;
+  if(!(await appConfirm(msg)))return;
+  if(!(await appConfirm('Last check: this rewrites every salary. Have you exported the archive?')))return;
   const r=seasonRollover();alert(r.msg);
 }
 function renderRolloverPreview(){
@@ -2206,7 +2237,7 @@ async function ghPull(opts){
   const localHasData=Object.keys(ARCHIVE.seasons||{}).length>0||Object.keys(ARCHIVE.players||{}).length>0;
   const newer = theirs && (!mine || theirs>mine);
   if(!newer && localHasData && !opts.force)return {ok:true,skipped:true,msg:'Local copy is current (repo not newer).'};
-  if(opts.confirm && localHasData && !confirm('Load the repo archive ('+(theirs||'?')+')?\nThis replaces the copy in this browser.'))return {ok:false,msg:'Cancelled.'};
+  if(opts.confirm && localHasData && !(await appConfirm('Load the repo archive ('+(theirs||'?')+')?\nThis replaces the copy in this browser.')))return {ok:false,msg:'Cancelled.'};
   ARCHIVE=a;archMigrate();ARCHIVE.remoteUpdatedAt=theirs;ARCHIVE.updatedAt=theirs;archSaveRaw();  /* keep remote stamp: prevents re-adopting every boot */
   if(ARCHIVE.currentSeason){if(!DATA.meta)DATA.meta={};DATA.meta.season=ARCHIVE.currentSeason;}
   return {ok:true,adopted:true,msg:'Loaded archive from repo ('+(theirs||'no timestamp')+').'};
@@ -2228,7 +2259,7 @@ async function ghPush(){
   if(remote&&remote.updatedAt){
     const seen=ARCHIVE.remoteUpdatedAt||null;
     if(remote.updatedAt>(ghStamp()||'')&&remote.updatedAt!==seen){
-      if(!confirm('The repo copy is NEWER than this browser\'s ('+remote.updatedAt+').\nPushing will overwrite it. Continue?'))return {ok:false,msg:'Push cancelled \u2014 pull first.'};
+      if(!(await appConfirm('The repo copy is NEWER than this browser\'s ('+remote.updatedAt+').\nPushing will overwrite it. Continue?')))return {ok:false,msg:'Push cancelled \u2014 pull first.'};
     }
   }
   ARCHIVE.updatedAt=new Date().toISOString();
@@ -2338,7 +2369,7 @@ async function ghPullSession(opts){
   const newer=theirs&&(!mine||theirs>mine);
   if(!newer&&localN>0&&!opts.force)return {ok:true,skipped:true,msg:'Draft board already current.'};
   if(newer&&localN>0&&_sessDirty()&&!opts.force)return {ok:true,skipped:true,conflict:true,theirs:theirs,msg:'Repo has a newer board, but this device has unsaved changes \u2014 not overwriting. Save yours, or tap Pull to load the repo\'s.'};
-  if(opts.confirm&&localN>0&&!confirm('Load the draft board from the repo ('+(theirs||'?')+')?\nThis replaces the board in THIS browser.'))return {ok:false,msg:'Cancelled.'};
+  if(opts.confirm&&localN>0&&!(await appConfirm('Load the draft board from the repo ('+(theirs||'?')+')?\nThis replaces the board in THIS browser.')))return {ok:false,msg:'Cancelled.'};
   MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};m.team=(i.team!=null?i.team:null);m.cost=(i.cost!=null?i.cost:null);m.contractYr=null;});  /* clean slate so the adopted board is an EXACT copy */
   applySession(d);
   try{localStorage.setItem('mmfl_war_room',JSON.stringify(d));}catch(e){}   /* keep the remote stamp */
@@ -2357,10 +2388,10 @@ async function ghPushSession(){
     else if(g.status===401||g.status===403)return {ok:false,msg:'Token rejected (401/403).'};
   }catch(e){return {ok:false,msg:'Could not reach GitHub.'};}
   const localN=_sessAssignN(sessionData()),remoteN=_sessAssignN(remote);
-  if(localN===0&&remoteN>0){if(!confirm('This browser\'s draft board is empty, but the repo has '+remoteN+' picks. Overwrite it with an empty board?'))return {ok:false,msg:'Session push cancelled.'};}
+  if(localN===0&&remoteN>0){if(!(await appConfirm('This browser\'s draft board is empty, but the repo has '+remoteN+' picks. Overwrite it with an empty board?')))return {ok:false,msg:'Session push cancelled.'};}
   if(remote&&remote.updatedAt){
     if(remote.updatedAt>(_localSessStamp()||'')&&remote.updatedAt!==_sessRemoteSeen){
-      if(!confirm('The repo draft board is NEWER than this browser\'s ('+remote.updatedAt+').\nPushing overwrites it. Continue?'))return {ok:false,msg:'Push cancelled \u2014 pull first.'};
+      if(!(await appConfirm('The repo draft board is NEWER than this browser\'s ('+remote.updatedAt+').\nPushing overwrites it. Continue?')))return {ok:false,msg:'Push cancelled \u2014 pull first.'};
     }
   }
   const sess=sessionData();sess.updatedAt=new Date().toISOString();
@@ -2715,14 +2746,14 @@ function renderArchive(){
    +`<div id="arch-preview"></div>`
    +`<div class="arch-note">Freezes each roster's <b>actual salary</b> alongside the <b>projection as it stands now</b> \u2014 the pair that trains future pricing. The exported file is the record of truth; this browser is only a cache.</div>`;
   const sb=$('#arch-submit');
-  if(sb)sb.addEventListener('click',()=>{
-    if(isDone&&!confirm('Overwrite the submitted roster for '+cur+'?'))return;
+  if(sb)sb.addEventListener('click',async()=>{
+    if(isDone&&!(await appConfirm('Overwrite the submitted roster for '+cur+'?')))return;
     const r=archSubmitRoster(cur);
     if(!r.ok){alert(r.msg);return;}
     renderArchive();
     const b=$('#arch-submit');if(b){const t=b.textContent;b.textContent='Submitted \u2713';setTimeout(()=>{renderArchive();},1300);}
   });
-  const ub=$('#arch-undo');if(ub)ub.addEventListener('click',()=>{if(confirm('Remove '+cur+' from the '+yr+' archive?')){archUnsubmit(cur);renderArchive();}});
+  const ub=$('#arch-undo');if(ub)ub.addEventListener('click',async()=>{if(await appConfirm('Remove '+cur+' from the '+yr+' archive?')){archUnsubmit(cur);renderArchive();}});
   const bj=$('#arch-json');if(bj)bj.addEventListener('click',archExportJSON);
   const bc=$('#arch-csv');if(bc)bc.addEventListener('click',archExportCostsCSV);
   const bp=$('#arch-pv');if(bp)bp.addEventListener('click',renderRolloverPreview);
@@ -2761,7 +2792,78 @@ function applyRosterData(rosters){
    a single team, since this can move every roster in the league at once. */
 let _rimPreview=null, _rimRows=null, _rimFormat=null;
 
+
+/* ---- "Full rosters" export: flat Avail/Player/Salary/Contract, covers the WHOLE league
+   (every team + free agents) in one file, with REAL salary and contract year -- more complete
+   than the weekly stats export, which carries no salary/contract data at all. ---- */
+
+/* Native confirm()/alert() can silently fail or auto-dismiss in standalone (home-screen icon)
+   mode on mobile. This renders a real in-page dialog instead, so confirmations always work. */
+function appConfirm(msg){
+  return new Promise(resolve=>{
+    const ov=document.createElement('div');ov.className='appconfirm-ov';
+    ov.innerHTML=`<div class="appconfirm-box"><div class="appconfirm-msg">${String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div><div class="appconfirm-acts"><button class="sbtn" id="appconfirm-no">Cancel</button><button class="sbtn arch-primary" id="appconfirm-yes">OK</button></div></div>`;
+    document.body.appendChild(ov);
+    const done=v=>{ov.remove();resolve(v);};
+    ov.querySelector('#appconfirm-yes').addEventListener('click',()=>done(true));
+    ov.querySelector('#appconfirm-no').addEventListener('click',()=>done(false));
+    ov.addEventListener('click',e=>{if(e.target===ov)done(false);});
+  });
+}
+
+function looksLikeFullRosterExport(text){
+  const rows=parseCSVRows(text);
+  for(let i=0;i<Math.min(rows.length,6);i++){
+    const c=(rows[i]||[]).map(x=>String(x||'').trim().toLowerCase());
+    if(c[0]==='avail'&&c[1]==='player'&&c.indexOf('salary')>=0&&c.indexOf('contract')>=0)return true;
+  }
+  return false;
+}
+function _parseContractYr(raw){
+  const s=String(raw||'').trim().toUpperCase();
+  if(!s||s==='0')return null;                 /* not applicable (free agent) */
+  if(s.indexOf('F')>=0)return CONTRACT_MAX_YR; /* franchise / final year */
+  const n=parseFloat(s);
+  return (n>=1&&n<=CONTRACT_MAX_YR)?Math.round(n):null;
+}
+function _parseFullRosterSalary(raw){
+  const n=parseFloat(String(raw||'').replace(/[^0-9.]/g,''));
+  return isNaN(n)?null:n;
+}
+function parseFullRosterExport(text){
+  const rows=parseCSVRows(text);
+  let hdrIdx=-1;
+  for(let i=0;i<Math.min(rows.length,6);i++){
+    const c=(rows[i]||[]).map(x=>String(x||'').trim().toLowerCase());
+    if(c[0]==='avail'&&c[1]==='player'){hdrIdx=i;break;}
+  }
+  if(hdrIdx<0)return {ok:false,rows:[]};
+  const head=rows[hdrIdx].map(x=>String(x||'').trim().toLowerCase());
+  const iAvail=head.indexOf('avail'), iPlayer=head.indexOf('player'), iSalary=head.indexOf('salary'), iContract=head.indexOf('contract');
+  const out=[];
+  for(let i=hdrIdx+1;i<rows.length;i++){
+    const r=rows[i]; if(!r||!r.length)continue;
+    const playerCell=r[iPlayer]; if(!playerCell)continue;
+    const pc=_splitPlayerCell(playerCell); if(!pc.name)continue;
+    const availRaw=String(r[iAvail]||'').trim();
+    const salaryRaw=String(r[iSalary]||'').trim();
+    const isTransitioned=/T$/i.test(salaryRaw);   /* transition tag: pending -- owner could still franchise instead, so keep him rostered until "Start Draft" */
+    const team=(!availRaw||availRaw.toUpperCase()==='W')?null:availRaw;
+    out.push({player:pc.name,pos:pc.pos,nfl:pc.nfl,team:team,
+      salary:team?_parseFullRosterSalary(r[iSalary]):null,
+      contractYr:team?_parseContractYr(r[iContract]):null,
+      transitioned:isTransitioned,
+      transitionPrice:isTransitioned?_parseFullRosterSalary(r[iSalary]):null});
+  }
+  return {ok:out.length>0,rows:out};
+}
+
 function _rimParse(text){
+  if(looksLikeFullRosterExport(text)){
+    const f=parseFullRosterExport(text);
+    if(!f.ok)return {ok:false,msg:'Could not read that file.'};
+    return {ok:true,rows:f.rows,format:'fullroster'};
+  }
   if(looksLikeLeagueExport(text)){
     const p=parseLeagueExport(text);
     if(!p.ok)return {ok:false,msg:'Could not read that file.'};
@@ -2810,7 +2912,8 @@ function renderRimPreview(){
   if(!_rimPreview){el.innerHTML='';return;}
   const p=_rimPreview;
   const fmtName=x=>x.m?x.m.name:x;
-  let h=`<div class="arch-pv"><b>${_rimFormat==='native'?'League export':'Rosters CSV'} detected</b> \u00b7 ${p.totalRows} rows \u00b7 ${p.matched.length} matched`
+  const _rimLabel={native:'League export',simple:'Rosters CSV',fullroster:'Full rosters export'}[_rimFormat]||'File';
+  let h=`<div class="arch-pv"><b>${_rimLabel} detected</b> \u00b7 ${p.totalRows} rows \u00b7 ${p.matched.length} matched`
    +(p.unmatched.length?` \u00b7 <span style="color:#c0392b">${p.unmatched.length} unmatched</span>`:'')
    +`<div class="arch-note">`
    +`<b>${p.cut.length}</b> cut to free agency`+(p.cut.length?': '+p.cut.slice(0,8).map(m=>m.name).join(', ')+(p.cut.length>8?'\u2026':''):'')+`<br>`
@@ -2818,17 +2921,30 @@ function renderRimPreview(){
    +`<b>${p.added.length}</b> newly rostered (were free agents)`+(p.added.length?': '+p.added.slice(0,6).map(x=>x.m.name).join(', ')+(p.added.length>6?'\u2026':''):'')
    +(p.unmatched.length?`<br><span style="color:#c0392b">Unmatched</span>: ${p.unmatched.slice(0,10).join(', ')}${p.unmatched.length>10?'\u2026':''}`:'')
    +(_rimFormat==='native'?`<br><i>League export has no salary data \u2014 existing salaries are kept for anyone who stays rostered.</i>`:'')
+   +(_rimFormat==='fullroster'?`<br><i>Salary and contract year are updated for everyone in the file.</i>`:'')
    +`</div><div class="arch-acts" style="margin-top:8px"><button class="sbtn arch-primary" id="rim-commit">Apply to all 16 teams</button><button class="sbtn" id="rim-cancel">Cancel</button></div></div>`;
   el.innerHTML=h;
   $('#rim-commit').addEventListener('click',rimCommit);
   $('#rim-cancel').addEventListener('click',()=>{_rimPreview=null;_rimRows=null;renderRimPreview();});
 }
-function rimCommit(){
+async function rimCommit(){
   if(!_rimRows||!_rimPreview)return;
   const p=_rimPreview;
-  if(!confirm('This updates all 16 teams: '+p.cut.length+' cut to free agency, '+p.moved.length+' change teams, '+p.added.length+' newly rostered. Continue?'))return;
+  if(!(await appConfirm('This updates all 16 teams: '+p.cut.length+' cut to free agency, '+p.moved.length+' change teams, '+p.added.length+' newly rostered. Continue?')))return;
   if(_rimFormat==='simple'){
     applyRosterData(_rimRows);   // existing behavior: authoritative for team+salary+contractYr
+  } else if(_rimFormat==='fullroster'){
+    const ix=archNameIndex();
+    const matchedIds=new Set();
+    _rimRows.forEach(r=>{const id=ix[statNorm(r.player)];const m=id?mById[id]:null;if(m){
+      matchedIds.add(m.id);
+      m.team=r.team||null;
+      if(r.team){ if(r.salary!=null)m.cost=r.salary; if(r.contractYr!=null)m.contractYr=r.contractYr; }
+      else { m.cost=null; m.contractYr=null; }
+      m.transitionTag=!!r.transitioned;
+      m.transitionPrice=(r.transitionPrice!=null?r.transitionPrice:null);
+    }});
+    MASTER.forEach(m=>{if(m.season==null)return;if(!matchedIds.has(m.id)){m.team=null;m.cost=null;m.contractYr=null;}});
   } else {
     const ix=archNameIndex();
     const matchedIds=new Set();
@@ -2931,7 +3047,7 @@ function wireDataIO(){
   const fileb=(id,fn)=>{const el=$('#'+id);if(el)el.addEventListener('change',e=>{if(e.target.files&&e.target.files[0])fn(e.target.files[0]);e.target.value='';});};
   fileb('imp-rosters',rimHandleFile);fileb('imp-rookies',importDraftOrder);fileb('imp-proj',importProjections);
 }
-function _bkTs(){const d=new Date();const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes());}function fullBackup(){try{const lg={};try{['mmfl_league_rosters','mmfl_pick_owners','mmfl_league_projections'].forEach(k=>{const v=localStorage.getItem(k);if(v!=null)lg[k]=v;});}catch(e){}const payload={kind:'mmfl_backup',v:2,savedAt:new Date().toISOString(),season:(typeof leagueSeason==='function'?leagueSeason():null),session:sessionData(),league:lg};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mmfl_backup_'+_bkTs()+'.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);return true;}catch(e){return false;}}function restoreBackup(file){if(!confirm('Restore from this backup? This replaces your current draft session and league data in this browser.'))return;const fr=new FileReader();fr.onload=function(){try{const data=JSON.parse(fr.result);if(data&&data.kind==='mmfl_backup'){try{if(data.league){for(const k in data.league){if(data.league[k]!=null)localStorage.setItem(k,data.league[k]);}}}catch(e){}try{localStorage.setItem('mmfl_war_room',JSON.stringify(data.session||{}));}catch(e){}location.reload();return;}applySession(data);reprice();if(typeof loadSliders==='function')loadSliders();sqRender();renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();renderRookie();saveSession();}catch(e){alert('Could not read that backup file.');}};fr.readAsText(file);}
+function _bkTs(){const d=new Date();const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes());}function fullBackup(){try{const lg={};try{['mmfl_league_rosters','mmfl_pick_owners','mmfl_league_projections'].forEach(k=>{const v=localStorage.getItem(k);if(v!=null)lg[k]=v;});}catch(e){}const payload={kind:'mmfl_backup',v:2,savedAt:new Date().toISOString(),season:(typeof leagueSeason==='function'?leagueSeason():null),session:sessionData(),league:lg};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mmfl_backup_'+_bkTs()+'.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);return true;}catch(e){return false;}}async function restoreBackup(file){if(!(await appConfirm('Restore from this backup? This replaces your current draft session and league data in this browser.')))return;const fr=new FileReader();fr.onload=function(){try{const data=JSON.parse(fr.result);if(data&&data.kind==='mmfl_backup'){try{if(data.league){for(const k in data.league){if(data.league[k]!=null)localStorage.setItem(k,data.league[k]);}}}catch(e){}try{localStorage.setItem('mmfl_war_room',JSON.stringify(data.session||{}));}catch(e){}location.reload();return;}applySession(data);reprice();if(typeof loadSliders==='function')loadSliders();sqRender();renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();renderRookie();saveSession();}catch(e){alert('Could not read that backup file.');}};fr.readAsText(file);}
 function exportSession(){try{const blob=new Blob([JSON.stringify(sessionData(),null,2)],{type:'application/json'});const u=URL.createObjectURL(blob);const a=document.createElement('a');a.href=u;a.download='mmfl_draft_session.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(u);}catch(e){}}
 function importSession(file){const fr=new FileReader();fr.onload=function(){try{applySession(JSON.parse(fr.result));reprice();if(typeof loadSliders==='function')loadSliders();sqRender();renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();saveSession();renderRookie();saveSession();}catch(e){alert('Could not read that session file.');}};fr.readAsText(file);}
 document.addEventListener('click',function(e){const w=e.target.closest&&e.target.closest('[data-watch]');if(w){const id=w.dataset.watch;if(watchSet.has(id))watchSet.delete(id);else watchSet.add(id);saveSession();renderAuction();renderBoard();}});
