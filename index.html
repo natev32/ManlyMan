@@ -544,6 +544,12 @@ input,textarea,select,[contenteditable]{caret-color:#111}
 .appconfirm-box{background:#fff;border-radius:12px;max-width:420px;width:100%;padding:18px 20px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
 .appconfirm-msg{font-size:14px;line-height:1.5;color:var(--ink);white-space:normal}
 .appconfirm-acts{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+
+.grade-pill{display:inline-block;min-width:34px;text-align:center;font-size:12px;font-weight:800;color:#fff;border-radius:5px;padding:2px 7px}
+.sd-grade-tbl i{font-style:normal;color:var(--ink-faint);font-size:10.5px}
+.sd-grade-tbl .pct{color:var(--ink-faint);font-size:10.5px}
+.sd-grades-pv{margin-top:10px}
+.sd-active{border-color:#1462d6!important;background:#f0f6ff}
 .ttag{display:inline-block;font-size:10px;font-weight:700;color:#9a6a00;background:#fff3d6;border:1px solid #e8d8a8;border-radius:999px;padding:1px 6px;margin-left:4px;vertical-align:middle}
 .sd-pv{border-color:#e8d8a8!important;background:#fffaf0}
 .arch-roll{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:9px;border-top:1px dashed var(--line2)}
@@ -730,6 +736,7 @@ input,textarea,select,[contenteditable]{caret-color:#111}
   <section class="view" id="v-auction">
     <div class="section-h">Auction <span class="accent">Pool</span></div>
     <div id="sd-bar"></div>
+    <div id="sd-grades"></div>
     <div class="warbar" id="auc-warbar"><div class="wb-hud" id="wb-hud"></div><div class="wb-block"><div class="wb-search-wrap"><span class="wb-blab">On the block</span><input id="wb-search" list="wb-dl" placeholder="type a player&hellip;" autocomplete="off"><datalist id="wb-dl"></datalist></div><div class="wb-analysis" id="wb-analysis"></div></div></div>
     <p class="intro">Players not on a roster. <b>Value&nbsp;$</b> = fair value &middot; <b>Live&nbsp;$</b> = expected spend &middot; <b>Last&nbsp;$</b> = last year.</p>
     <div class="vctrl">
@@ -1253,23 +1260,105 @@ function sqRender(){renderBoard();}
 let aPos='ALL',aQuery='',aSort='season',aDir=-1,aEdit=null,aEditVal=0; let onBlockId=null;
 
 /* ---- "Start Draft": release still-pending transition-tagged players into the pool at once ---- */
+let DRAFT_ACTIVE=false, DRAFT_START_IDX=null;
 function pendingTransitions(){ return MASTER.filter(m=>m.transitionTag&&m.team); }
+
+function draftPicksSinceStart(){
+  if(DRAFT_START_IDX==null)return [];
+  return draftLog.slice(DRAFT_START_IDX).filter(e=>e.action==='draft');
+}
+function gradeFor(pctFrac){
+  const p=pctFrac*100;
+  if(p>=20)return 'A+'; if(p>=12)return 'A'; if(p>=6)return 'A-';
+  if(p>=2)return 'B+'; if(p>=-2)return 'B'; if(p>=-6)return 'B-';
+  if(p>=-10)return 'C+'; if(p>=-15)return 'C'; if(p>=-20)return 'C-';
+  if(p>=-30)return 'D'; return 'F';
+}
+function gradeColor(g){
+  if(g[0]==='A')return '#1a9850'; if(g[0]==='B')return '#3fa9f5'; if(g[0]==='C')return '#e0a800';
+  if(g[0]==='D')return '#e07b00'; return '#c0392b';
+}
+/* per-team draft report: spend, fair value received (anchor at pick time), surplus, best/worst pick, letter grade.
+   Grade = surplus as % of dollars spent. Bands are a reasonable starting point (roughly symmetric around
+   break-even = B) -- worth recalibrating once real auction results exist to check against. */
+function computeDraftGrades(){
+  const picks=draftPicksSinceStart();
+  const byTeam={};
+  picks.forEach(p=>{
+    const anchor=(p.anchor!=null?p.anchor:((mById[p.id]&&mById[p.id].anchor)||0))||0;
+    const surplus=anchor-p.cost;
+    const t=(byTeam[p.team]=byTeam[p.team]||{team:p.team,picks:[],spent:0,value:0});
+    t.picks.push(Object.assign({},p,{anchor:anchor,surplus:+surplus.toFixed(2)}));
+    t.spent+=p.cost;t.value+=anchor;
+  });
+  const teams=Object.keys(byTeam).map(k=>{
+    const t=byTeam[k],surplus=t.value-t.spent,pct=t.spent>0?surplus/t.spent:0;
+    const sorted=t.picks.slice().sort((a,b)=>b.surplus-a.surplus);
+    return {team:t.team,picks:t.picks.length,spent:+t.spent.toFixed(2),value:+t.value.toFixed(2),
+      surplus:+surplus.toFixed(2),pct:+(pct*100).toFixed(1),
+      best:sorted[0]||null,worst:sorted[sorted.length-1]||null,grade:gradeFor(pct)};
+  });
+  teams.sort((a,b)=>b.pct-a.pct);
+  return teams;
+}
+function renderDraftGrades(){
+  const el=$('#sd-grades');if(!el)return;
+  if(DRAFT_START_IDX==null||!draftPicksSinceStart().length){el.innerHTML='';return;}
+  const teams=computeDraftGrades();
+  const totalSpent=teams.reduce((s,t)=>s+t.spent,0),totalPicks=teams.reduce((s,t)=>s+t.picks,0);
+  let h=`<div class="arch-pv sd-grades-pv"><div class="arch-row"><b>Draft ${DRAFT_ACTIVE?'in progress':'grades'}</b><span class="arch-count">${totalPicks} picks \u00b7 $${fmt(totalSpent,2)} spent</span></div>`;
+  h+=`<table class="arch-tbl sd-grade-tbl"><tr><th class="l">Team</th><th>Grade</th><th>Picks</th><th>Spent</th><th>Value</th><th>Surplus</th><th class="l">Best pickup</th><th class="l">Worst overpay</th></tr>`;
+  teams.forEach(t=>{
+    const gc=gradeColor(t.grade);
+    const bestTxt=t.best?(t.best.name+' <i>+$'+fmt(t.best.surplus,2)+'</i>'):'\u2014';
+    const worstTxt=t.worst&&t.worst.surplus<0?(t.worst.name+' <i>-$'+fmt(Math.abs(t.worst.surplus),2)+'</i>'):(t.worst?t.worst.name+' <i>+$'+fmt(t.worst.surplus,2)+'</i>':'\u2014');
+    h+=`<tr><td class="l"><b>${t.team}</b></td><td><span class="grade-pill" style="background:${gc}">${t.grade}</span></td><td>${t.picks}</td><td>$${fmt(t.spent,2)}</td><td>$${fmt(t.value,2)}</td><td class="${t.surplus>=0?'up':'rel'}">${t.surplus>=0?'+$':'-$'}${fmt(Math.abs(t.surplus),2)} <span class="pct">(${t.pct>=0?'+':''}${t.pct}%)</span></td><td class="l">${bestTxt}</td><td class="l">${worstTxt}</td></tr>`;
+  });
+  h+=`</table><div class="arch-note">Grade = surplus (fair value \u2212 cost) as a percent of what a team spent. Fair value is captured at the moment of each pick, not recalculated afterward.</div></div>`;
+  el.innerHTML=h;
+}
 function renderStartDraftBar(){
   const el=$('#sd-bar'); if(!el)return;
+  if(DRAFT_ACTIVE){
+    const n=draftPicksSinceStart().length;
+    el.innerHTML=`<div class="arch-pv sd-pv sd-active"><b>Draft in progress</b> \u2014 ${n} pick${n===1?'':'s'} made so far.`
+     +`<div class="arch-acts" style="margin-top:8px"><button class="sbtn arch-primary" id="sd-end">End Draft \u2014 grade the class</button></div></div>`;
+    $('#sd-end').addEventListener('click',endDraft);
+    renderDraftGrades();
+    return;
+  }
   const pend=pendingTransitions();
-  if(!pend.length){el.innerHTML='';return;}
-  el.innerHTML=`<div class="arch-pv sd-pv"><b>${pend.length} player${pend.length===1?'':'s'} still transition-tagged</b> \u2014 their owner could still franchise them instead of letting them hit the pool.`
-   +`<div class="arch-note">${pend.map(m=>m.name+' ('+m.team+', $'+fmt(m.transitionPrice,2)+')').slice(0,10).join(', ')}${pend.length>10?'\u2026':''}</div>`
-   +`<div class="arch-acts" style="margin-top:8px"><button class="sbtn arch-danger" id="sd-start">Start Draft \u2014 release to pool</button></div></div>`;
-  $('#sd-start').addEventListener('click',startDraftRelease);
+  const hasPastDraft = DRAFT_START_IDX!=null && draftPicksSinceStart().length>0;
+  let h='<div class="arch-pv sd-pv">';
+  if(pend.length){
+    h+=`<b>${pend.length} player${pend.length===1?'':'s'} still transition-tagged</b> \u2014 their owner could still franchise them instead of letting them hit the pool.`
+     +`<div class="arch-note">${pend.map(m=>m.name+' ('+m.team+', $'+fmt(m.transitionPrice,2)+')').slice(0,10).join(', ')}${pend.length>10?'\u2026':''}</div>`;
+  } else {
+    h+='<b>Ready when you are.</b>';
+  }
+  h+=`<div class="arch-acts" style="margin-top:8px"><button class="sbtn arch-danger" id="sd-start">Start Draft${pend.length?' \u2014 release to pool':''}</button>`
+   +(hasPastDraft?`<button class="sbtn" id="sd-viewgrades">View last draft\u2019s grades</button>`:'')
+   +`</div></div>`;
+  el.innerHTML=h;
+  $('#sd-start').addEventListener('click',startDraft);
+  const vg=$('#sd-viewgrades');if(vg)vg.addEventListener('click',renderDraftGrades);
 }
-async function startDraftRelease(){
+async function startDraft(){
   const pend=pendingTransitions();
-  if(!pend.length)return;
-  if(!(await appConfirm('Release '+pend.length+' transition-tagged player'+(pend.length===1?'':'s')+' to the auction pool at their T-tag price?\n\n'+pend.map(m=>m.name+' ('+m.team+')').join('\n'))))return;
-  pend.forEach(m=>{ m.team=null; m.cost=null; m.contractYr=null; });   /* transitionTag/transitionPrice stay on the player for the pool badge */
-  rebaseline();reprice();rerenderAll();renderStartDraftBar();
-  alert(pend.length+' player'+(pend.length===1?'':'s')+' released to the pool.');
+  const msg=pend.length
+    ? ('Release '+pend.length+' transition-tagged player'+(pend.length===1?'':'s')+' to the pool and start the draft?\n\n'+pend.map(m=>m.name+' ('+m.team+')').join('\n'))
+    : 'Start the draft? Every pick from here on gets graded when you end it.';
+  if(!(await appConfirm(msg)))return;
+  pend.forEach(m=>{ m.team=null; m.cost=null; m.contractYr=null; });
+  DRAFT_ACTIVE=true; DRAFT_START_IDX=draftLog.length;
+  rebaseline();reprice();rerenderAll();renderStartDraftBar();saveSession();
+  alert('Draft started.'+(pend.length?(' '+pend.length+' released to the pool.'):''));
+}
+async function endDraft(){
+  if(!draftPicksSinceStart().length){if(!(await appConfirm('No picks were made. End the draft anyway?')))return;}
+  else if(!(await appConfirm('End the draft and grade all '+Object.keys(computeDraftGrades().reduce((a,t)=>{a[t.team]=1;return a;},{})).length+' teams?')))return;
+  DRAFT_ACTIVE=false; saveSession();
+  renderStartDraftBar();renderDraftGrades();
 }
 
 function poolData(){let p=MASTER.filter(m=>!m.team);if(aWatch)p=p.filter(m=>watchSet.has(m.id));if(aPos!=='ALL')p=p.filter(m=>m.pos===aPos);if(aQuery){const q=aQuery.toLowerCase();p=p.filter(m=>m.name.toLowerCase().includes(q)||(m.nfl||'').toLowerCase().includes(q));}return p.sort((a,b)=>{let av=a[aSort],bv=b[aSort];if(aSort==='name')return aDir*((av>bv)-(av<bv));av=av==null?-1e9:av;bv=bv==null?-1e9:bv;return aDir*(av-bv);});}
@@ -1304,24 +1393,6 @@ function blockWonIt(){const m=onBlockId?mById[onBlockId]:null;if(!m)return;var b
 function wireWarbar(){const wb=document.getElementById('auc-warbar');if(!wb)return;var search=document.getElementById('wb-search');if(search)search.addEventListener('change',function(){var v=search.value.trim().toLowerCase();var hit=MASTER.find(function(m){return !m.team&&m.season!=null&&(m.name||'').toLowerCase()===v;});if(hit){onBlockId=hit.id;renderBlock();search.value='';var b=document.getElementById('wb-bid');if(b){b.focus();b.select();}}});wb.addEventListener('input',function(e){if(e.target&&e.target.id==='wb-bid')updateVerdict();});wb.addEventListener('click',function(e){if(e.target&&e.target.id==='wb-won')blockWonIt();else if(e.target&&e.target.id==='wb-clear'){onBlockId=null;renderBlock();}});wb.addEventListener('keydown',function(e){if(e.target&&e.target.id==='wb-bid'&&e.key==='Enter'){e.preventDefault();blockWonIt();}});}
 
 
-function detectTiers(pos){
-  var avail=MASTER.filter(function(m){return !m.team&&m.pos===pos&&m.ppg!=null;}).sort(function(a,b){return (b.ppg||0)-(a.ppg||0);});
-  var demand={QB:18,RB:42,WR:42,TE:22,K:16,DST:16}[pos]||24;
-  var rel=avail.filter(function(m){return m.anchor>=1.0;});
-  if(rel.length<6)rel=avail.slice(0,Math.min(demand,avail.length));
-  if(rel.length>demand)rel=rel.slice(0,demand);
-  var tierOf={};var n=rel.length;if(n===0)return tierOf;
-  if(n<6){for(var z=0;z<n;z++)tierOf[rel[z].id]=0;return tierOf;}
-  var gaps=[];for(var i=1;i<n;i++)gaps.push(rel[i-1].ppg-rel[i].ppg);
-  var gs=gaps.slice().sort(function(a,b){return a-b;});var med=gs[Math.floor(gs.length/2)]||0;
-  var thresh=Math.max(med*1.5,0.4);var minSize=3;
-  var tier=0,cnt=1;tierOf[rel[0].id]=0;
-  for(var j=1;j<n;j++){
-    if((rel[j-1].ppg-rel[j].ppg)>=thresh&&cnt>=minSize&&tier<5){tier++;cnt=0;}
-    tierOf[rel[j].id]=tier;cnt++;
-  }
-  return tierOf;
-}
 
 const SCHED2026=[[["PHILLY DILLY","STUGOTS"],["Muck Fichigan","Mouth of Madden"],["Dirty Sanchez's","Bzitch"],["Beesnuts","BRO's"],["The Rookie","Local #69"],["I'm Back","Captain Ron"],["Dickey Did It","Johnny Kum Lately"],["Goon Squad","Nobody Beats the Wiz"]],[["PHILLY DILLY","Dickey Did It"],["Goon Squad","Mouth of Madden"],["Beesnuts","Bzitch"],["BRO's","Dirty Sanchez's"],["STUGOTS","Johnny Kum Lately"],["Local #69","Captain Ron"],["The Rookie","I'm Back"],["Nobody Beats the Wiz","Muck Fichigan"]],[["Johnny Kum Lately","PHILLY DILLY"],["Nobody Beats the Wiz","Mouth of Madden"],["BRO's","Bzitch"],["Dirty Sanchez's","Beesnuts"],["STUGOTS","Dickey Did It"],["The Rookie","Captain Ron"],["Local #69","I'm Back"],["Muck Fichigan","Goon Squad"]],[["Goon Squad","PHILLY DILLY"],["Johnny Kum Lately","Muck Fichigan"],["Local #69","Bzitch"],["Dirty Sanchez's","The Rookie"],["STUGOTS","Nobody Beats the Wiz"],["BRO's","I'm Back"],["Beesnuts","Captain Ron"],["Dickey Did It","Mouth of Madden"]],[["Nobody Beats the Wiz","PHILLY DILLY"],["Mouth of Madden","Johnny Kum Lately"],["Bzitch","The Rookie"],["Dirty Sanchez's","Local #69"],["STUGOTS","Goon Squad"],["Captain Ron","BRO's"],["I'm Back","Beesnuts"],["Muck Fichigan","Dickey Did It"]],[["PHILLY DILLY","Mouth of Madden"],["Nobody Beats the Wiz","Johnny Kum Lately"],["Bzitch","Captain Ron"],["Dirty Sanchez's","I'm Back"],["STUGOTS","Muck Fichigan"],["BRO's","The Rookie"],["Local #69","Beesnuts"],["Dickey Did It","Goon Squad"]],[["PHILLY DILLY","Muck Fichigan"],["Johnny Kum Lately","Goon Squad"],["Bzitch","I'm Back"],["Captain Ron","Dirty Sanchez's"],["Mouth of Madden","STUGOTS"],["Local #69","BRO's"],["The Rookie","Beesnuts"],["Nobody Beats the Wiz","Dickey Did It"]],[["PHILLY DILLY","STUGOTS"],["Mouth of Madden","Muck Fichigan"],["Bzitch","Dirty Sanchez's"],["BRO's","Beesnuts"],["The Rookie","Local #69"],["Captain Ron","I'm Back"],["Dickey Did It","Johnny Kum Lately"],["Nobody Beats the Wiz","Goon Squad"]],[["Dickey Did It","PHILLY DILLY"],["Mouth of Madden","Goon Squad"],["Beesnuts","Bzitch"],["BRO's","Dirty Sanchez's"],["Johnny Kum Lately","STUGOTS"],["Captain Ron","Local #69"],["I'm Back","The Rookie"],["Muck Fichigan","Nobody Beats the Wiz"]],[["Johnny Kum Lately","PHILLY DILLY"],["Mouth of Madden","Nobody Beats the Wiz"],["Bzitch","BRO's"],["Dirty Sanchez's","Beesnuts"],["STUGOTS","Dickey Did It"],["Captain Ron","The Rookie"],["I'm Back","Local #69"],["Goon Squad","Muck Fichigan"]],[["Captain Ron","PHILLY DILLY"],["Johnny Kum Lately","The Rookie"],["Mouth of Madden","Bzitch"],["Muck Fichigan","Dirty Sanchez's"],["I'm Back","STUGOTS"],["BRO's","Nobody Beats the Wiz"],["Beesnuts","Goon Squad"],["Local #69","Dickey Did It"]],[["I'm Back","PHILLY DILLY"],["The Rookie","Dickey Did It"],["Bzitch","Muck Fichigan"],["Goon Squad","Dirty Sanchez's"],["Mouth of Madden","BRO's"],["Beesnuts","Nobody Beats the Wiz"],["Captain Ron","Johnny Kum Lately"],["Local #69","STUGOTS"]],[["PHILLY DILLY","Local #69"],["The Rookie","STUGOTS"],["Goon Squad","Bzitch"],["Nobody Beats the Wiz","Dirty Sanchez's"],["I'm Back","Johnny Kum Lately"],["Muck Fichigan","BRO's"],["Beesnuts","Mouth of Madden"],["Dickey Did It","Captain Ron"]],[["PHILLY DILLY","The Rookie"],["Bzitch","Nobody Beats the Wiz"],["Dirty Sanchez's","Mouth of Madden"],["Dickey Did It","I'm Back"],["Goon Squad","BRO's"],["Muck Fichigan","Beesnuts"],["STUGOTS","Captain Ron"],["Johnny Kum Lately","Local #69"]]];
 let recVol=0.24,recOpen=null;
@@ -1462,8 +1533,8 @@ function renderAuction(){
   const INFL=inflationRate();renderInflBanner(INFL);const INFLP=inflationByPos();renderInflPos(INFLP);
   const teamOpts=TEAMS.map(t=>`<option${t===myTeam?' selected':''}>${t}</option>`).join('');
   const _needSet={};if(myTeam){const _need={QB:1,RB:2,WR:2,TE:1,K:1,DST:1};for(const _p in _need){const _h=MASTER.filter(x=>x.team===myTeam&&x.pos===_p).length;if(_h<_need[_p])_needSet[_p]=1;}}
-  const _tierOf=(aPos!=='ALL'&&['season','ppg','vor','anchor'].indexOf(aSort)>=0&&aDir===-1)?detectTiers(aPos):null;
-  var _maxT=_tierOf?Math.max.apply(null,Object.keys(_tierOf).map(function(k){return _tierOf[k];}).concat([0])):0;
+  const _tierOf=null;   /* tiers removed */
+  var _maxT=0;
   var _seenTier={};var _tierName=['Elite','Strong','Solid','Serviceable','Depth','Deep'];
   $('#aucrows').innerHTML=d.map(m=>{
     const _cls=((myTeam&&_needSet[m.pos])?'need ':'')+(watchSet.has(m.id)?'watch':'');
@@ -1487,7 +1558,7 @@ $('#aq').oninput=e=>{aQuery=e.target.value;aEdit=null;renderAuction();};
 document.querySelectorAll('#auctbl thead th[data-as]').forEach(th=>th.onclick=()=>{const k=th.dataset.as;if(aSort===k)aDir*=-1;else{aSort=k;aDir=(k==='name')?1:-1;}aEdit=null;renderAuction();});
 $('#aucrows').addEventListener('click',e=>{
   const d=e.target.closest('[data-draft]');if(d){aEdit=(aEdit===d.dataset.draft)?null:d.dataset.draft;aEditVal=aEdit?Math.max(0.25,((mById[aEdit]||{}).anchor||0.25)*inflationRate()):0;renderAuction();setTimeout(updAucGrade,0);return;}
-  const c=e.target.closest('[data-confirm]');if(c){const id=c.dataset.confirm;const cost=r25($('#ac-cost').value);const team=$('#ac-team').value;const _m=mById[id];draftLog.push({id,name:_m.name,pos:_m.pos,team,cost,prevTeam:_m.team,prevCost:_m.cost,action:'draft'});_m.team=team;_m.cost=cost;_m.contractYr=_m.contractYr||1;aEdit=null;renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();saveSession();return;}
+  const c=e.target.closest('[data-confirm]');if(c){const id=c.dataset.confirm;const cost=r25($('#ac-cost').value);const team=$('#ac-team').value;const _m=mById[id];draftLog.push({id,name:_m.name,pos:_m.pos,team,cost,prevTeam:_m.team,prevCost:_m.cost,action:'draft',anchor:_m.anchor});_m.team=team;_m.cost=cost;_m.contractYr=_m.contractYr||1;aEdit=null;renderAuction();renderCap();renderCockpit();renderPower();renderDraftLog();renderBudgets();saveSession();return;}
   const x=e.target.closest('[data-cancel]');if(x){aEdit=null;renderAuction();}
 });
 
@@ -1709,11 +1780,11 @@ document.addEventListener('click',function(e){const u=e.target.closest('[data-un
 
 /* ---------- WATCHLIST + SESSION PERSISTENCE ---------- */
 let watchSet=new Set(), aWatch=false, INITIAL_STATE={};
-function sessionData(){const a={};MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};if(m.team!==i.team||m.cost!==i.cost)a[m.id]={team:m.team,cost:m.cost,contractYr:m.contractYr};});const adj={};MASTER.forEach(m=>{if(m.adj){const e={ppg:m.ppg,season:m.season};if(m.stats)e.stats=m.stats;if(m.ppgOrig!=null){e.ppgOrig=m.ppgOrig;e.seasonOrig=m.seasonOrig;}adj[m.id]=e;}});return {v:1,mv:MODEL_VERSION,updatedAt:new Date().toISOString(),assign:a,watch:Array.from(watchSet),myTeam:myTeam,sliders:SLIDERS,marketScale:marketScale,marketFloor:MARKET_FLOOR,draftLog:draftLog,rookiePicks:rookiePicks,adjusts:adj};}
+function sessionData(){const a={};MASTER.forEach(m=>{const i=INITIAL_STATE[m.id]||{};if(m.team!==i.team||m.cost!==i.cost)a[m.id]={team:m.team,cost:m.cost,contractYr:m.contractYr};});const adj={};MASTER.forEach(m=>{if(m.adj){const e={ppg:m.ppg,season:m.season};if(m.stats)e.stats=m.stats;if(m.ppgOrig!=null){e.ppgOrig=m.ppgOrig;e.seasonOrig=m.seasonOrig;}adj[m.id]=e;}});return {v:1,mv:MODEL_VERSION,updatedAt:new Date().toISOString(),assign:a,watch:Array.from(watchSet),myTeam:myTeam,sliders:SLIDERS,marketScale:marketScale,marketFloor:MARKET_FLOOR,draftLog:draftLog,rookiePicks:rookiePicks,adjusts:adj,draftActive:DRAFT_ACTIVE,draftStartIdx:DRAFT_START_IDX};}
 function applySession(d){if(!d)return;if(d.assign)for(const id in d.assign){const m=mById[id];if(m){m.team=d.assign[id].team;m.cost=d.assign[id].cost;if(d.assign[id].contractYr!=null)m.contractYr=d.assign[id].contractYr;}}if(d.watch)watchSet=new Set(d.watch);if(d.myTeam)myTeam=d.myTeam;
   /* a session saved under a different pricing model would silently override this file's values */
   if(d.sliders&&d.mv===MODEL_VERSION)SLIDERS=d.sliders;else if(typeof resetSliders==='function')resetSliders();
-  marketScale=1;if(d.marketFloor!=null)MARKET_FLOOR=d.marketFloor;if(d.draftLog)draftLog=d.draftLog;if(d.rookiePicks)rookiePicks=d.rookiePicks;if(d.adjusts){for(const id in d.adjusts){const m=mById[id];if(m){const aa=d.adjusts[id];if(aa.stats)m.stats=Object.assign({},aa.stats);if(aa.ppgOrig!=null){m.ppgOrig=aa.ppgOrig;m.seasonOrig=aa.seasonOrig;}if(aa.ppg!=null)m.ppg=aa.ppg;if(aa.season!=null)m.season=aa.season;m.adj=true;}}if(typeof recomputeDerived==='function')recomputeDerived();}}
+  marketScale=1;if(d.marketFloor!=null)MARKET_FLOOR=d.marketFloor;if(d.draftLog)draftLog=d.draftLog;if(d.rookiePicks)rookiePicks=d.rookiePicks;if(d.draftActive!=null)DRAFT_ACTIVE=d.draftActive;if(d.draftStartIdx!=null)DRAFT_START_IDX=d.draftStartIdx;if(d.adjusts){for(const id in d.adjusts){const m=mById[id];if(m){const aa=d.adjusts[id];if(aa.stats)m.stats=Object.assign({},aa.stats);if(aa.ppgOrig!=null){m.ppgOrig=aa.ppgOrig;m.seasonOrig=aa.seasonOrig;}if(aa.ppg!=null)m.ppg=aa.ppg;if(aa.season!=null)m.season=aa.season;m.adj=true;}}if(typeof recomputeDerived==='function')recomputeDerived();}}
 var cardOpenId=null;let adjOpen=null;
 function refreshCardIfOpen(){const ov=$('#pcard');if(cardOpenId&&ov&&!ov.hidden&&mById[cardOpenId])openCard(cardOpenId);}
 function saveSession(){try{
