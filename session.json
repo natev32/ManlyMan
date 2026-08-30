@@ -1,7 +1,7 @@
 {
   "v": 1,
   "mv": "{\"QB\":{\"repl\":212.8,\"eliteProd\":162,\"elite\":21,\"floor\":6.44,\"depth\":24,\"startPpg\":16.57},\"RB\":{\"repl\":91,\"eliteProd\":253.3,\"elite\":30.55,\"floor\":6.06,\"depth\":54,\"startPpg\":9.85},\"WR\":{\"repl\":128.7,\"eliteProd\":226.6,\"elite\":27.33,\"floor\":2.81,\"depth\":66,\"startPpg\":8.93},\"TE\":{\"repl\":94.6,\"eliteProd\":140,\"elite\":18.87,\"floor\":2.25,\"depth\":22,\"startPpg\":7.22},\"K\":{\"repl\":126.3,\"eliteProd\":28,\"elite\":3.33,\"floor\":0.5,\"depth\":16,\"startPpg\":7.55},\"DST\":{\"repl\":171.8,\"eliteProd\":61.9,\"elite\":5.67,\"floor\":0.5,\"depth\":16,\"startPpg\":10.15}}|{\"QB\":{\"heat\":0.7,\"elite\":1},\"RB\":{\"heat\":1,\"elite\":1.3},\"WR\":{\"heat\":1.16,\"elite\":1.42},\"TE\":{\"heat\":1.02,\"elite\":1.24},\"K\":{\"heat\":1,\"elite\":1},\"DST\":{\"heat\":1.3,\"elite\":1}}|{\"heat\":1,\"sens\":1,\"gamma\":0.85}",
-  "updatedAt": "2026-08-30T14:04:36.495Z",
+  "updatedAt": "2026-08-30T15:22:07.636Z",
   "assign": {
     "p46": {
       "team": "Dickey Did It",
@@ -78,6 +78,11 @@
       "cost": 6.5,
       "contractYr": 1
     },
+    "p225": {
+      "team": null,
+      "cost": null,
+      "contractYr": 2
+    },
     "p234": {
       "team": null,
       "cost": null,
@@ -95,7 +100,7 @@
     }
   },
   "watch": [],
-  "myTeam": "PHILLY DILLY",
+  "myTeam": "The Rookie",
   "sliders": {
     "QB": {
       "heat": 1,
@@ -631,6 +636,16 @@
       "cost": null,
       "prevTeam": "PHILLY DILLY",
       "prevCost": 2.5,
+      "action": "cut"
+    },
+    {
+      "id": "p225",
+      "name": "Jayden Higgins",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 3.5,
       "action": "cut"
     }
   ],
