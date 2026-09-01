@@ -1,7 +1,7 @@
 {
   "v": 1,
   "mv": "{\"QB\":{\"repl\":212.8,\"eliteProd\":162,\"elite\":21,\"floor\":6.44,\"depth\":24,\"startPpg\":16.57},\"RB\":{\"repl\":91,\"eliteProd\":253.3,\"elite\":30.55,\"floor\":6.06,\"depth\":54,\"startPpg\":9.85},\"WR\":{\"repl\":128.7,\"eliteProd\":226.6,\"elite\":27.33,\"floor\":2.81,\"depth\":66,\"startPpg\":8.93},\"TE\":{\"repl\":94.6,\"eliteProd\":140,\"elite\":18.87,\"floor\":2.25,\"depth\":22,\"startPpg\":7.22},\"K\":{\"repl\":126.3,\"eliteProd\":28,\"elite\":3.33,\"floor\":0.5,\"depth\":16,\"startPpg\":7.55},\"DST\":{\"repl\":171.8,\"eliteProd\":61.9,\"elite\":5.67,\"floor\":0.5,\"depth\":16,\"startPpg\":10.15}}|{\"QB\":{\"heat\":0.7,\"elite\":1},\"RB\":{\"heat\":1,\"elite\":1.3},\"WR\":{\"heat\":1.16,\"elite\":1.42},\"TE\":{\"heat\":1.02,\"elite\":1.24},\"K\":{\"heat\":1,\"elite\":1},\"DST\":{\"heat\":1.3,\"elite\":1}}|{\"heat\":1,\"sens\":1,\"gamma\":0.85}",
-  "updatedAt": "2026-09-01T16:29:38.761Z",
+  "updatedAt": "2026-09-01T16:30:00.974Z",
   "assign": {
     "p46": {
       "team": "Dickey Did It",
@@ -48,6 +48,11 @@
       "cost": 1.25,
       "contractYr": 1
     },
+    "p150": {
+      "team": "Captain Ron",
+      "cost": 7,
+      "contractYr": 1
+    },
     "p154": {
       "team": "Beesnuts",
       "cost": 6,
@@ -62,11 +67,6 @@
       "team": null,
       "cost": null,
       "contractYr": 3
-    },
-    "p214": {
-      "team": "The Rookie",
-      "cost": 6.5,
-      "contractYr": 1
     },
     "p225": {
       "team": null,
@@ -657,12 +657,32 @@
       "prevTeam": "Captain Ron",
       "prevCost": 7,
       "action": "cut"
+    },
+    {
+      "id": "p150",
+      "name": "Carnell Tate",
+      "pos": "WR",
+      "team": "Captain Ron",
+      "cost": 7,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p214",
+      "name": "KC Concepcion",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 6.5,
+      "action": "cut"
     }
   ],
   "rookiePicks": {
     "1": "p46",
     "2": "p85",
-    "4": "p214",
+    "3": "p150",
     "5": "p154",
     "6": "p427",
     "12": "p277"
