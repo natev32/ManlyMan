@@ -573,6 +573,8 @@ input,textarea,select,[contenteditable]{caret-color:#111}
   #board td.l{max-width:104px}
   #board th,#board td{padding-left:6px;padding-right:6px}
   #board .asset{min-width:30px;padding:2px 5px}
+  #board .tagsel{display:block;font-size:9px;padding:1px 2px;max-width:64px;margin-top:2px}
+  #board .ttag{display:inline-block;margin-top:2px;font-size:9px;padding:0 4px}
 }
 
 .trd-teams{display:grid;grid-template-columns:1fr auto 1fr;gap:14px;align-items:start;margin:6px 0 12px}
@@ -1231,6 +1233,17 @@ function _rawAsset(p){if(p.season==null)return 0;var an=(p.anchor!=null?p.anchor
 function _fitAsset(){if(_assetFit)return _assetFit;var xs=[],ys=[];MASTER.forEach(function(p){if(p.assetScore!=null&&p.season!=null){xs.push(_rawAsset(p));ys.push(p.assetScore);}});var n=xs.length;if(n<8){_assetFit={m:1.4,b:35};return _assetFit;}var sx=0,sy=0,sxx=0,sxy=0;for(var i=0;i<n;i++){sx+=xs[i];sy+=ys[i];sxx+=xs[i]*xs[i];sxy+=xs[i]*ys[i];}var den=(n*sxx-sx*sx)||1,m=(n*sxy-sx*sy)/den,b=(sy-m*sx)/n;_assetFit={m:m,b:b};return _assetFit;}
 function computedAsset(p){if(p.season==null)return null;var f=_fitAsset();return Math.max(1,Math.min(99,Math.round(f.m*_rawAsset(p)+f.b)));}
 function assetOf(p){return p.assetScore!=null?p.assetScore:computedAsset(p);}
+
+function _tagCtrl(p){
+  if(!p.team||p.contractYr!==CONTRACT_MAX_YR)return '';
+  const cur=p.franchiseTag?'F':(p.transitionTag?'T':'');
+  return `<select class="tagsel" data-tagid="${p.id}" title="Franchise/Transition tag (final contract year)">`
+   +`<option value=""${cur===''?' selected':''}>Tag\u2026</option>`
+   +`<option value="F"${cur==='F'?' selected':''}>Franchise</option>`
+   +`<option value="T"${cur==='T'?' selected':''}>Transition</option>`
+   +`</select>`+(p.transitionTag&&p.transitionPrice!=null?` <span class="ttag">T $${fmt(p.transitionPrice,2)}</span>`:'');
+}
+
 function renderBoard(){
   const d=boardData();$('#boardcount').textContent=d.length+' players';
   $('#rows').innerHTML=d.map(p=>{const aS=assetOf(p);const aC=assetColor(aS==null?0:aS);const _aE=(p.assetScore==null&&aS!=null);return `<tr>
@@ -1238,13 +1251,25 @@ function renderBoard(){
     <td class="l"><span class="pos-tag ${p.pos}">${p.pos}</span></td>
     <td class="l" style="color:var(--ink-dim);font-weight:600">${p.team||'\u2014'}</td>
     <td class="mono" style="color:var(--ink-dim)">${fmt(p.ppg,1)}</td>
-    <td class="mono">${p.cost==null?'\u2014':'$'+fmt(p.cost,2)}</td>
+    <td class="mono">${p.cost==null?'\u2014':'$'+fmt(p.cost,2)}${_tagCtrl(p)?('<br>'+_tagCtrl(p)):''}</td>
     <td><span class="asset" style="color:${aC};border:1px solid ${aC}55" title="Asset value 1\u2013100${_aE?' (estimated from value model)':''}">${aS==null?'\u2014':(_aE?'~'+aS:aS)}</span></td><td class="mono" style="color:var(--green-dim);font-weight:600" title="multi-year surplus over remaining contract years">${p.keeperVal==null?'\u2014':'$'+fmt(p.keeperVal,0)}</td></tr>`;}).join('');
 }
 document.querySelectorAll('#v-draft .pos-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('#v-draft .pos-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');posFilter=b.dataset.pos;renderBoard();});
 $('#q').oninput=e=>{query=e.target.value;renderBoard();};
 document.querySelectorAll('#board thead th[data-s]').forEach(th=>th.onclick=()=>{const k=th.dataset.s;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='name')?1:-1;}document.querySelectorAll('#board thead th .ar').forEach(a=>a.remove());const ar=document.createElement('span');ar.className='ar';ar.textContent=sortDir<0?' \u25BC':' \u25B2';th.appendChild(ar);renderBoard();});
 $('#rows').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)sqAdd(decodeURIComponent(b.dataset.add));});
+$('#rows').addEventListener('change',async e=>{
+  const sel=e.target.closest('[data-tagid]');if(!sel)return;
+  const m=mById[sel.dataset.tagid];if(!m)return;
+  const val=sel.value;
+  if(val==='F'){ m.franchiseTag=true; m.transitionTag=false; m.transitionPrice=null; }
+  else if(val==='T'){
+    const price=await appPrompt('Transition price for '+m.name+'?\n(his 3rd-year rate \u2014 he enters the pool at this price)', m.cost);
+    if(price==null){ renderBoard(); return; }   /* cancelled: leave state as it was, just redraw the reverted dropdown */
+    m.transitionTag=true; m.transitionPrice=price; m.franchiseTag=false;
+  } else { m.transitionTag=false; m.franchiseTag=false; m.transitionPrice=null; }
+  saveSession();renderBoard();if(typeof renderStartDraftBar==='function')renderStartDraftBar();
+});
 (function(){const sel=$('#teamfilter');if(sel){sel.innerHTML='<option value="ALL">All teams</option><option value="__FA__">Free Agents</option>'+TEAMS.slice().sort().map(t=>'<option value="'+t+'">'+t+'</option>').join('');sel.addEventListener('change',()=>{teamFilter=sel.value;renderBoard();});}})();
 const SLOTDEF=[['QB','QB'],['RB','RB'],['RB','RB'],['WR','WR'],['WR','WR'],['TE','TE'],['K','K'],['DST','DST']];
 const byName=n=>DATA.players.find(x=>x.name===n);
@@ -1267,7 +1292,7 @@ function draftPicksSinceStart(){
   if(DRAFT_START_IDX==null)return [];
   return draftLog.slice(DRAFT_START_IDX).filter(e=>e.action==='draft');
 }
-function gradeFor(pctFrac){
+function draftGradeFor(pctFrac){
   const p=pctFrac*100;
   if(p>=20)return 'A+'; if(p>=12)return 'A'; if(p>=6)return 'A-';
   if(p>=2)return 'B+'; if(p>=-2)return 'B'; if(p>=-6)return 'B-';
@@ -1296,7 +1321,7 @@ function computeDraftGrades(){
     const sorted=t.picks.slice().sort((a,b)=>b.surplus-a.surplus);
     return {team:t.team,picks:t.picks.length,spent:+t.spent.toFixed(2),value:+t.value.toFixed(2),
       surplus:+surplus.toFixed(2),pct:+(pct*100).toFixed(1),
-      best:sorted[0]||null,worst:sorted[sorted.length-1]||null,grade:gradeFor(pct)};
+      best:sorted[0]||null,worst:sorted[sorted.length-1]||null,grade:draftGradeFor(pct)};
   });
   teams.sort((a,b)=>b.pct-a.pct);
   return teams;
@@ -1605,6 +1630,9 @@ let PICK_OWNERS=["Dickey Did It","PHILLY DILLY","Captain Ron","The Rookie","Bees
 const pickOwner=p=>PICK_OWNERS[p-1]||null;
 const slotPrice=p=>{const rp=DATA.rookiePrices.find(x=>x.pick===p);return rp?rp.price:0;};
 const rookieById=id=>DATA.rookiePool.find(r=>r.id===id);
+function _ownerSel(pick,owner){
+  return `<select class="rookownersel" data-pickowner="${pick}">`+TEAMS.slice().sort().map(t=>`<option value="${t}"${t===owner?' selected':''}>${t}</option>`).join('')+`</select>`;
+}
 function renderRookie(){
   Object.keys(rookiePicks).forEach(pk=>{const _m=mById[rookiePicks[pk]];if(!_m||_m.team!==pickOwner(+pk))delete rookiePicks[pk];});
   const assigned=new Set(Object.values(rookiePicks));
@@ -1614,7 +1642,7 @@ function renderRookie(){
   DATA.rookiePrices.forEach(rp=>{
     const rid=rookiePicks[rp.pick];const owner=pickOwner(rp.pick);
     if(rid){const r=rookieById(rid);const sur=r.value-rp.price;const gr=gradeFor(r.value,rp.price);totVal+=r.value;totCost+=rp.price;n++;
-      rows+=`<tr><td class="pickno">${rp.pick}</td><td class="rookowner${owner===myTeam?' me':''}">${owner||'\u2014'}</td><td class="pickpr">$${fmt(rp.price,2)}</td>
+      rows+=`<tr><td class="pickno">${rp.pick}</td><td class="rookowner${owner===myTeam?' me':''}">${_ownerSel(rp.pick,owner)}</td><td class="pickpr">$${fmt(rp.price,2)}</td>
         <td><b>${r.name}</b> <span class="pmeta">${r.nfl||''}</span></td>
         <td><span class="pos-tag ${r.pos}">${r.pos}</span></td>
         <td class="anchor">$${fmt(r.value,2)}</td>
@@ -1622,7 +1650,7 @@ function renderRookie(){
         <td><span class="grade" style="color:${gr.c};border:1px solid ${gr.c}55">${gr.g}</span><button class="rookx" data-unpick="${rp.pick}">\u2715</button></td></tr>`;
     }else{
       const opts=avail.map(r=>`<option value="${r.id}">${r.name} \u2014 ${r.pos} ($${fmt(r.value,2)})</option>`).join('');
-      rows+=`<tr><td class="pickno">${rp.pick}</td><td class="rookowner${owner===myTeam?' me':''}">${owner||'\u2014'}</td><td class="pickpr">$${fmt(rp.price,2)}</td>
+      rows+=`<tr><td class="pickno">${rp.pick}</td><td class="rookowner${owner===myTeam?' me':''}">${_ownerSel(rp.pick,owner)}</td><td class="pickpr">$${fmt(rp.price,2)}</td>
         <td colspan="5"><select class="rooksel" data-pick="${rp.pick}"><option value="">\u2014 assign rookie \u2014</option>${opts}</select></td></tr>`;
     }
   });
@@ -1634,7 +1662,17 @@ function renderRookie(){
     <div class="c"><div class="n">$${fmt(totVal,2)}</div><div class="k">Auction value</div></div>
     <div class="c"><div class="n" style="color:${sur>=0?'var(--green)':'var(--red)'}">${sur>=0?'+':''}$${fmt(sur,2)}</div><div class="k">Surplus captured</div></div>`;
 }
-$('#rooktbl').addEventListener('change',e=>{const sel=e.target.closest('[data-pick]');if(sel&&sel.value){
+$('#rooktbl').addEventListener('change',e=>{
+  const ownerSel=e.target.closest('[data-pickowner]');
+  if(ownerSel){
+    const pick=+ownerSel.dataset.pickowner,newOwner=ownerSel.value;
+    PICK_OWNERS[pick-1]=newOwner;
+    try{localStorage.setItem('mmfl_pick_owners',JSON.stringify(PICK_OWNERS));}catch(err){}
+    const rid=rookiePicks[pick];if(rid){const m=mById[rid];if(m)m.team=newOwner;}
+    rebaseline();reprice();rerenderAll();
+    return;
+  }
+  const sel=e.target.closest('[data-pick]');if(sel&&sel.value){
   const pick=+sel.dataset.pick,rid=sel.value,owner=pickOwner(pick),price=slotPrice(pick),m=mById[rid];
   rookiePicks[pick]=rid;
   if(m&&owner){draftLog.push({id:rid,name:m.name,pos:m.pos,team:owner,cost:price,prevTeam:m.team,prevCost:m.cost,action:'rookie'});m.team=owner;m.cost=price;m.contractYr=m.contractYr||1;}
@@ -2879,6 +2917,23 @@ function appConfirm(msg){
     ov.querySelector('#appconfirm-yes').addEventListener('click',()=>done(true));
     ov.querySelector('#appconfirm-no').addEventListener('click',()=>done(false));
     ov.addEventListener('click',e=>{if(e.target===ov)done(false);});
+  });
+}
+
+
+function appPrompt(msg, defaultVal){
+  return new Promise(resolve=>{
+    const ov=document.createElement('div');ov.className='appconfirm-ov';
+    ov.innerHTML=`<div class="appconfirm-box"><div class="appconfirm-msg">${String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>')}</div>`
+      +`<input type="number" step="0.25" min="0" id="appprompt-input" value="${defaultVal!=null?defaultVal:''}" style="width:100%;font:inherit;font-size:15px;padding:7px 9px;margin-top:10px;border:1px solid var(--line2);border-radius:6px;box-sizing:border-box">`
+      +`<div class="appconfirm-acts"><button class="sbtn" id="appprompt-no">Cancel</button><button class="sbtn arch-primary" id="appprompt-yes">Set</button></div></div>`;
+    document.body.appendChild(ov);
+    const inp=ov.querySelector('#appprompt-input');inp.focus();inp.select();
+    const done=v=>{ov.remove();resolve(v);};
+    ov.querySelector('#appprompt-yes').addEventListener('click',()=>{const n=parseFloat(inp.value);done(isNaN(n)?null:n);});
+    ov.querySelector('#appprompt-no').addEventListener('click',()=>done(null));
+    inp.addEventListener('keydown',e=>{if(e.key==='Enter'){const n=parseFloat(inp.value);done(isNaN(n)?null:n);}});
+    ov.addEventListener('click',e=>{if(e.target===ov)done(null);});
   });
 }
 
