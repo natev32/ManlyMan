@@ -1,7 +1,7 @@
 {
   "v": 1,
   "mv": "{\"QB\":{\"repl\":212.8,\"eliteProd\":162,\"elite\":21,\"floor\":6.44,\"depth\":24,\"startPpg\":16.57},\"RB\":{\"repl\":91,\"eliteProd\":253.3,\"elite\":30.55,\"floor\":6.06,\"depth\":54,\"startPpg\":9.85},\"WR\":{\"repl\":128.7,\"eliteProd\":226.6,\"elite\":27.33,\"floor\":2.81,\"depth\":66,\"startPpg\":8.93},\"TE\":{\"repl\":94.6,\"eliteProd\":140,\"elite\":18.87,\"floor\":2.25,\"depth\":22,\"startPpg\":7.22},\"K\":{\"repl\":126.3,\"eliteProd\":28,\"elite\":3.33,\"floor\":0.5,\"depth\":16,\"startPpg\":7.55},\"DST\":{\"repl\":171.8,\"eliteProd\":61.9,\"elite\":5.67,\"floor\":0.5,\"depth\":16,\"startPpg\":10.15}}|{\"QB\":{\"heat\":0.7,\"elite\":1},\"RB\":{\"heat\":1,\"elite\":1.3},\"WR\":{\"heat\":1.16,\"elite\":1.42},\"TE\":{\"heat\":1.02,\"elite\":1.24},\"K\":{\"heat\":1,\"elite\":1},\"DST\":{\"heat\":1.3,\"elite\":1}}|{\"heat\":1,\"sens\":1,\"gamma\":0.85}",
-  "updatedAt": "2026-09-03T20:46:07.173Z",
+  "updatedAt": "2026-09-05T20:12:45.388Z",
   "assign": {
     "p12": {
       "team": null,
@@ -16,11 +16,6 @@
     "p24": {
       "team": "PHILLY DILLY",
       "cost": 21,
-      "contractYr": 1
-    },
-    "p46": {
-      "team": "Dickey Did It",
-      "cost": 8,
       "contractYr": 1
     },
     "p47": {
@@ -53,24 +48,9 @@
       "cost": 2.25,
       "contractYr": 1
     },
-    "p85": {
-      "team": "PHILLY DILLY",
-      "cost": 7.5,
-      "contractYr": 1
-    },
     "p120": {
       "team": "I'm Back",
       "cost": 1.25,
-      "contractYr": 1
-    },
-    "p150": {
-      "team": "Captain Ron",
-      "cost": 7,
-      "contractYr": 1
-    },
-    "p154": {
-      "team": "PHILLY DILLY",
-      "cost": 5.5,
       "contractYr": 1
     },
     "p177": {
@@ -78,20 +58,10 @@
       "cost": 0.25,
       "contractYr": 1
     },
-    "p178": {
-      "team": "Beesnuts",
-      "cost": 6,
-      "contractYr": 1
-    },
     "p183": {
       "team": null,
       "cost": null,
       "contractYr": 3
-    },
-    "p214": {
-      "team": "Mouth of Madden",
-      "cost": 4,
-      "contractYr": 1
     },
     "p225": {
       "team": null,
@@ -107,36 +77,6 @@
       "team": null,
       "cost": null,
       "contractYr": 3
-    },
-    "p275": {
-      "team": "Goon Squad",
-      "cost": 3.5,
-      "contractYr": 1
-    },
-    "p277": {
-      "team": "PHILLY DILLY",
-      "cost": 2.5,
-      "contractYr": 1
-    },
-    "p289": {
-      "team": "Dickey Did It",
-      "cost": 3,
-      "contractYr": 1
-    },
-    "p350": {
-      "team": "The Rookie",
-      "cost": 4.5,
-      "contractYr": 1
-    },
-    "p427": {
-      "team": "The Rookie",
-      "cost": 6.5,
-      "contractYr": 1
-    },
-    "p434": {
-      "team": "The Rookie",
-      "cost": 5,
-      "contractYr": 1
     }
   },
   "watch": [],
@@ -1129,22 +1069,129 @@
       "prevTeam": null,
       "prevCost": null,
       "action": "rookie"
+    },
+    {
+      "id": "p46",
+      "name": "Jeremiyah Love",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dickey Did It",
+      "prevCost": 8,
+      "action": "cut"
+    },
+    {
+      "id": "p85",
+      "name": "Jadarian Price",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 7.5,
+      "action": "cut"
+    },
+    {
+      "id": "p150",
+      "name": "Carnell Tate",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Captain Ron",
+      "prevCost": 7,
+      "action": "cut"
+    },
+    {
+      "id": "p427",
+      "name": "Jonah Coleman",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 6.5,
+      "action": "cut"
+    },
+    {
+      "id": "p178",
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Beesnuts",
+      "prevCost": 6,
+      "action": "cut"
+    },
+    {
+      "id": "p154",
+      "name": "Jordyn Tyson",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 5.5,
+      "action": "cut"
+    },
+    {
+      "id": "p434",
+      "name": "Nicholas Singleton",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 5,
+      "action": "cut"
+    },
+    {
+      "id": "p350",
+      "name": "Emmett Johnson",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "The Rookie",
+      "prevCost": 4.5,
+      "action": "cut"
+    },
+    {
+      "id": "p214",
+      "name": "KC Concepcion",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Mouth of Madden",
+      "prevCost": 4,
+      "action": "cut"
+    },
+    {
+      "id": "p275",
+      "name": "Mike Washington Jr.",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Goon Squad",
+      "prevCost": 3.5,
+      "action": "cut"
+    },
+    {
+      "id": "p289",
+      "name": "Ted Hurst III",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dickey Did It",
+      "prevCost": 3,
+      "action": "cut"
+    },
+    {
+      "id": "p277",
+      "name": "De'Zhaun Stribling",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "PHILLY DILLY",
+      "prevCost": 2.5,
+      "action": "cut"
     }
   ],
-  "rookiePicks": {
-    "1": "p46",
-    "2": "p85",
-    "3": "p150",
-    "4": "p427",
-    "5": "p178",
-    "6": "p154",
-    "7": "p434",
-    "8": "p350",
-    "9": "p214",
-    "10": "p275",
-    "11": "p289",
-    "12": "p277"
-  },
+  "rookiePicks": {},
   "adjusts": {
     "p85": {
       "ppg": 11.52,
