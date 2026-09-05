@@ -3042,12 +3042,33 @@ function exportDraftOrder(){
 }
 function importDraftOrder(file){const fr=new FileReader();fr.onload=function(){try{
   const ord=parseCSV(fr.result);if(!ord.length)throw 0;
+  const headers=Object.keys(ord[0]);
+  const pickKey=headers.find(h=>/^pick\s*#?$|^slot$/i.test(h.trim()));
+  const teamKey=headers.find(h=>/^team$|^owner$/i.test(h.trim()));
+  if(!pickKey||!teamKey){alert('Could not find "pick" and "team" columns in that file.\nColumns found: '+headers.join(', '));return;}
+  const teamByLower={};TEAMS.forEach(t=>teamByLower[t.toLowerCase()]=t);
   const arr=PICK_OWNERS.slice();
-  ord.forEach(o=>{const p=+o.pick;if(p>=1&&p<=16&&o.team)arr[p-1]=o.team;});
+  let applied=0;const badTeam=[],badPick=[];
+  ord.forEach(o=>{
+    const p=+o[pickKey];
+    const rawTeam=String(o[teamKey]||'').trim();
+    const team=teamByLower[rawTeam.toLowerCase()];
+    if(!(p>=1&&p<=16)){if(rawTeam||o[pickKey])badPick.push(String(o[pickKey]));return;}
+    if(!team){if(rawTeam)badTeam.push(rawTeam);return;}
+    arr[p-1]=team;applied++;
+  });
+  if(applied===0){
+    alert('No rows could be applied.'
+      +(badTeam.length?('\nUnrecognized team name(s): '+badTeam.slice(0,6).join(', ')):'')
+      +(badPick.length?('\nInvalid pick number(s): '+badPick.slice(0,6).join(', ')):''));
+    return;
+  }
   PICK_OWNERS=arr;localStorage.setItem('mmfl_pick_owners',JSON.stringify(PICK_OWNERS));
   Object.keys(rookiePicks).forEach(pk=>{const m=mById[rookiePicks[pk]];if(m)m.team=pickOwner(+pk);});
   rebaseline();reprice();rerenderAll();
-  alert('Rookie draft order updated.');
+  alert('Rookie draft order updated \u2014 '+applied+' of 16 picks set.'
+    +(badTeam.length?(' '+badTeam.length+' row(s) had an unrecognized team name.'):'')
+    +(badPick.length?(' '+badPick.length+' row(s) had an invalid pick number.'):''));
 }catch(e){alert('Could not read that draft-order CSV. Use Export first to see the exact columns.');}};fr.readAsText(file);}
 function pctile(arr,q){const a=arr.slice().sort((x,y)=>x-y);if(!a.length)return 0;const idx=(q/100)*(a.length-1),lo=Math.floor(idx),hi=Math.ceil(idx);return lo===hi?a[lo]:a[lo]+(a[hi]-a[lo])*(idx-lo);}
 function recomputeDerived(){
