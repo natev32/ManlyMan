@@ -1,65 +1,756 @@
 {
   "v": 1,
   "mv": "{\"QB\":{\"repl\":212.8,\"eliteProd\":162,\"elite\":21,\"floor\":6.44,\"depth\":24,\"startPpg\":16.57},\"RB\":{\"repl\":91,\"eliteProd\":253.3,\"elite\":30.55,\"floor\":6.06,\"depth\":54,\"startPpg\":9.85},\"WR\":{\"repl\":128.7,\"eliteProd\":226.6,\"elite\":27.33,\"floor\":2.81,\"depth\":66,\"startPpg\":8.93},\"TE\":{\"repl\":94.6,\"eliteProd\":140,\"elite\":18.87,\"floor\":2.25,\"depth\":22,\"startPpg\":7.22},\"K\":{\"repl\":126.3,\"eliteProd\":28,\"elite\":3.33,\"floor\":0.5,\"depth\":16,\"startPpg\":7.55},\"DST\":{\"repl\":171.8,\"eliteProd\":61.9,\"elite\":5.67,\"floor\":0.5,\"depth\":16,\"startPpg\":10.15}}|{\"QB\":{\"heat\":0.7,\"elite\":1},\"RB\":{\"heat\":1,\"elite\":1.3},\"WR\":{\"heat\":1.16,\"elite\":1.42},\"TE\":{\"heat\":1.02,\"elite\":1.24},\"K\":{\"heat\":1,\"elite\":1},\"DST\":{\"heat\":1.3,\"elite\":1}}|{\"heat\":1,\"sens\":1,\"gamma\":0.85}",
-  "updatedAt": "2026-09-05T20:13:05.394Z",
+  "updatedAt": "2026-09-06T13:24:13.263Z",
   "assign": {
+    "p0": {
+      "team": "Muck Fichigan",
+      "cost": 23,
+      "contractYr": 1
+    },
+    "p6": {
+      "team": "Beesnuts",
+      "cost": 24,
+      "contractYr": 1
+    },
+    "p7": {
+      "team": "Bzitch",
+      "cost": 22.25,
+      "contractYr": 1
+    },
+    "p8": {
+      "team": "STUGOTS",
+      "cost": 16.25,
+      "contractYr": 1
+    },
+    "p9": {
+      "team": "Local #69",
+      "cost": 16,
+      "contractYr": 1
+    },
     "p12": {
-      "team": null,
-      "cost": null,
+      "team": "Beesnuts",
+      "cost": 15,
       "contractYr": 2
     },
-    "p47": {
+    "p13": {
+      "team": "BRO's",
+      "cost": 14,
+      "contractYr": 1
+    },
+    "p14": {
+      "team": "Captain Ron",
+      "cost": 14,
+      "contractYr": 1
+    },
+    "p16": {
       "team": "Nobody Beats the Wiz",
-      "cost": 3.75,
+      "cost": 22.5,
+      "contractYr": 1
+    },
+    "p17": {
+      "team": "I'm Back",
+      "cost": 24.5,
+      "contractYr": 1
+    },
+    "p19": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 10.25,
+      "contractYr": 1
+    },
+    "p20": {
+      "team": "Goon Squad",
+      "cost": 14,
+      "contractYr": 1
+    },
+    "p23": {
+      "team": "Johnny Kum Lately",
+      "cost": 6,
+      "contractYr": 1
+    },
+    "p24": {
+      "team": "The Rookie",
+      "cost": 20,
+      "contractYr": 1
+    },
+    "p26": {
+      "team": "The Rookie",
+      "cost": 12.25,
+      "contractYr": 1
+    },
+    "p27": {
+      "team": "PHILLY DILLY",
+      "cost": 16.25,
+      "contractYr": 1
+    },
+    "p28": {
+      "team": "PHILLY DILLY",
+      "cost": 6.75,
+      "contractYr": 1
+    },
+    "p35": {
+      "team": "STUGOTS",
+      "cost": 24.5,
+      "contractYr": 1
+    },
+    "p36": {
+      "team": "Dirty Sanchez's",
+      "cost": 8,
+      "contractYr": 1
+    },
+    "p37": {
+      "team": "Beesnuts",
+      "cost": 8.75,
+      "contractYr": 1
+    },
+    "p38": {
+      "team": "The Rookie",
+      "cost": 19,
+      "contractYr": 1
+    },
+    "p39": {
+      "team": "Bzitch",
+      "cost": 24.75,
+      "contractYr": 1
+    },
+    "p43": {
+      "team": "Captain Ron",
+      "cost": 18,
+      "contractYr": 1
+    },
+    "p44": {
+      "team": "Johnny Kum Lately",
+      "cost": 17,
       "contractYr": 1
     },
     "p50": {
-      "team": null,
-      "cost": null,
+      "team": "Muck Fichigan",
+      "cost": 17.25,
       "contractYr": 2
     },
-    "p58": {
+    "p51": {
+      "team": "Dirty Sanchez's",
+      "cost": 16,
+      "contractYr": 1
+    },
+    "p52": {
+      "team": "PHILLY DILLY",
+      "cost": 23.75,
+      "contractYr": 1
+    },
+    "p53": {
+      "team": "Goon Squad",
+      "cost": 15.25,
+      "contractYr": 1
+    },
+    "p54": {
+      "team": "I'm Back",
+      "cost": 3,
+      "contractYr": 1
+    },
+    "p56": {
+      "team": "Local #69",
+      "cost": 5,
+      "contractYr": 1
+    },
+    "p60": {
+      "team": "I'm Back",
+      "cost": 17.75,
+      "contractYr": 1
+    },
+    "p63": {
+      "team": "I'm Back",
+      "cost": 5.5,
+      "contractYr": 1
+    },
+    "p65": {
+      "team": "Captain Ron",
+      "cost": 15,
+      "contractYr": 1
+    },
+    "p71": {
+      "team": "Goon Squad",
+      "cost": 7,
+      "contractYr": 1
+    },
+    "p73": {
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "contractYr": 1
+    },
+    "p74": {
+      "team": "Muck Fichigan",
+      "cost": 3.25,
+      "contractYr": 1
+    },
+    "p77": {
+      "team": "Goon Squad",
+      "cost": 2.75,
+      "contractYr": 1
+    },
+    "p78": {
+      "team": "I'm Back",
+      "cost": 2,
+      "contractYr": 1
+    },
+    "p79": {
+      "team": "Muck Fichigan",
+      "cost": 2.25,
+      "contractYr": 1
+    },
+    "p80": {
+      "team": "Dickey Did It",
+      "cost": 2.5,
+      "contractYr": 1
+    },
+    "p81": {
+      "team": "Johnny Kum Lately",
+      "cost": 14.75,
+      "contractYr": 1
+    },
+    "p83": {
+      "team": "BRO's",
+      "cost": 3,
+      "contractYr": 1
+    },
+    "p86": {
+      "team": "STUGOTS",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p87": {
+      "team": "Beesnuts",
+      "cost": 9.25,
+      "contractYr": 1
+    },
+    "p89": {
+      "team": "Dirty Sanchez's",
+      "cost": 13,
+      "contractYr": 1
+    },
+    "p90": {
+      "team": "Dickey Did It",
+      "cost": 11,
+      "contractYr": 1
+    },
+    "p93": {
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p94": {
+      "team": "Muck Fichigan",
+      "cost": 11.25,
+      "contractYr": 1
+    },
+    "p95": {
+      "team": "Dickey Did It",
+      "cost": 2,
+      "contractYr": 1
+    },
+    "p96": {
+      "team": "Johnny Kum Lately",
+      "cost": 15.5,
+      "contractYr": 1
+    },
+    "p98": {
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p99": {
+      "team": "I'm Back",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p100": {
+      "team": "Captain Ron",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p102": {
+      "team": "Beesnuts",
+      "cost": 2,
+      "contractYr": 1
+    },
+    "p113": {
+      "team": "Goon Squad",
+      "cost": 11.25,
+      "contractYr": 1
+    },
+    "p115": {
+      "team": "The Rookie",
+      "cost": 2.5,
+      "contractYr": 1
+    },
+    "p117": {
+      "team": "PHILLY DILLY",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p119": {
+      "team": "Local #69",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p124": {
+      "team": "Mouth of Madden",
+      "cost": 2,
+      "contractYr": 1
+    },
+    "p127": {
+      "team": "I'm Back",
+      "cost": 9.25,
+      "contractYr": 1
+    },
+    "p130": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 8.5,
+      "contractYr": 1
+    },
+    "p131": {
+      "team": "Mouth of Madden",
+      "cost": 8,
+      "contractYr": 1
+    },
+    "p132": {
+      "team": "BRO's",
+      "cost": 10,
+      "contractYr": 1
+    },
+    "p134": {
+      "team": "Dirty Sanchez's",
+      "cost": 10,
+      "contractYr": 1
+    },
+    "p141": {
+      "team": "Dickey Did It",
+      "cost": 5,
+      "contractYr": 1
+    },
+    "p142": {
+      "team": "Beesnuts",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p144": {
+      "team": "The Rookie",
+      "cost": 1.75,
+      "contractYr": 1
+    },
+    "p146": {
+      "team": "Dirty Sanchez's",
+      "cost": 4.5,
+      "contractYr": 1
+    },
+    "p148": {
+      "team": "BRO's",
+      "cost": 10.25,
+      "contractYr": 1
+    },
+    "p149": {
+      "team": "Bzitch",
+      "cost": 1.5,
+      "contractYr": 1
+    },
+    "p155": {
+      "team": "I'm Back",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p158": {
+      "team": "BRO's",
+      "cost": 10,
+      "contractYr": 1
+    },
+    "p160": {
+      "team": "BRO's",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p161": {
+      "team": "Johnny Kum Lately",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p162": {
+      "team": "Dirty Sanchez's",
+      "cost": 0.75,
+      "contractYr": 1
+    },
+    "p164": {
+      "team": "PHILLY DILLY",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p165": {
+      "team": "Captain Ron",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p167": {
+      "team": "Muck Fichigan",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p169": {
+      "team": "STUGOTS",
+      "cost": 0.75,
+      "contractYr": 1
+    },
+    "p171": {
+      "team": "I'm Back",
+      "cost": 7,
+      "contractYr": 1
+    },
+    "p172": {
+      "team": "Captain Ron",
+      "cost": 1.75,
+      "contractYr": 1
+    },
+    "p174": {
+      "team": "I'm Back",
+      "cost": 3.5,
+      "contractYr": 1
+    },
+    "p175": {
+      "team": "Bzitch",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p177": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p180": {
+      "team": "Beesnuts",
+      "cost": 6,
+      "contractYr": 1
+    },
+    "p182": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p183": {
+      "team": "Johnny Kum Lately",
+      "cost": 1.75,
+      "contractYr": 3
+    },
+    "p184": {
+      "team": null,
+      "cost": null,
+      "contractYr": null
+    },
+    "p187": {
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p196": {
+      "team": "Bzitch",
+      "cost": 5.25,
+      "contractYr": 1
+    },
+    "p199": {
+      "team": "Goon Squad",
+      "cost": 8.75,
+      "contractYr": 1
+    },
+    "p203": {
+      "team": "Bzitch",
+      "cost": 4,
+      "contractYr": 1
+    },
+    "p204": {
+      "team": "Captain Ron",
+      "cost": 2.5,
+      "contractYr": 1
+    },
+    "p205": {
+      "team": "Dirty Sanchez's",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p207": {
+      "team": "Muck Fichigan",
+      "cost": 6.5,
+      "contractYr": 1
+    },
+    "p212": {
+      "team": "BRO's",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p220": {
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "contractYr": 1
+    },
+    "p221": {
+      "team": "BRO's",
+      "cost": 3,
+      "contractYr": 1
+    },
+    "p224": {
       "team": "Dirty Sanchez's",
       "cost": 3.5,
       "contractYr": 1
     },
-    "p66": {
-      "team": "STUGOTS",
-      "cost": 2.25,
+    "p226": {
+      "team": "The Rookie",
+      "cost": 3.5,
       "contractYr": 1
     },
-    "p75": {
-      "team": "Bzitch",
-      "cost": 2.25,
+    "p230": {
+      "team": "Muck Fichigan",
+      "cost": 1.25,
       "contractYr": 1
     },
-    "p120": {
+    "p231": {
+      "team": "Dirty Sanchez's",
+      "cost": 4.5,
+      "contractYr": 1
+    },
+    "p233": {
+      "team": "Local #69",
+      "cost": 1.75,
+      "contractYr": 1
+    },
+    "p235": {
+      "team": "PHILLY DILLY",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p237": {
+      "team": "PHILLY DILLY",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p238": {
+      "team": "Johnny Kum Lately",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p239": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p241": {
+      "team": "Dirty Sanchez's",
+      "cost": 6,
+      "contractYr": 1
+    },
+    "p243": {
+      "team": "BRO's",
+      "cost": 8,
+      "contractYr": 1
+    },
+    "p246": {
       "team": "I'm Back",
       "cost": 1.25,
       "contractYr": 1
     },
-    "p183": {
-      "team": null,
-      "cost": null,
-      "contractYr": 3
+    "p248": {
+      "team": "Beesnuts",
+      "cost": 0.25,
+      "contractYr": 1
     },
-    "p225": {
-      "team": null,
-      "cost": null,
-      "contractYr": 2
+    "p249": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 7.25,
+      "contractYr": 1
     },
-    "p234": {
-      "team": null,
-      "cost": null,
-      "contractYr": 2
+    "p253": {
+      "team": "Beesnuts",
+      "cost": 0.25,
+      "contractYr": 1
     },
-    "p262": {
+    "p255": {
+      "team": "Muck Fichigan",
+      "cost": 3.5,
+      "contractYr": 1
+    },
+    "p257": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p260": {
+      "team": "Local #69",
+      "cost": 1.25,
+      "contractYr": 1
+    },
+    "p264": {
+      "team": "The Rookie",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p265": {
+      "team": "Muck Fichigan",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p267": {
       "team": null,
       "cost": null,
-      "contractYr": 3
+      "contractYr": null
+    },
+    "p287": {
+      "team": "STUGOTS",
+      "cost": 0.75,
+      "contractYr": 1
+    },
+    "p295": {
+      "team": "STUGOTS",
+      "cost": 5.5,
+      "contractYr": 1
+    },
+    "p297": {
+      "team": "BRO's",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p300": {
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p302": {
+      "team": "The Rookie",
+      "cost": 3.5,
+      "contractYr": 1
+    },
+    "p305": {
+      "team": null,
+      "cost": null,
+      "contractYr": null
+    },
+    "p329": {
+      "team": "Local #69",
+      "cost": 1,
+      "contractYr": 1
+    },
+    "p338": {
+      "team": "Goon Squad",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p346": {
+      "team": "Bzitch",
+      "cost": 11.25,
+      "contractYr": 1
+    },
+    "p355": {
+      "team": "Goon Squad",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p357": {
+      "team": "STUGOTS",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p363": {
+      "team": "BRO's",
+      "cost": 2.25,
+      "contractYr": 1
+    },
+    "p376": {
+      "team": "Goon Squad",
+      "cost": 1.75,
+      "contractYr": 1
+    },
+    "p382": {
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p393": {
+      "team": "Nobody Beats the Wiz",
+      "cost": 2.5,
+      "contractYr": 1
+    },
+    "p416": {
+      "team": "Dickey Did It",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p418": {
+      "team": "Goon Squad",
+      "cost": 5.25,
+      "contractYr": 1
+    },
+    "p429": {
+      "team": "BRO's",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p431": {
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "contractYr": 1
+    },
+    "p432": {
+      "team": "Mouth of Madden",
+      "cost": 5.25,
+      "contractYr": 1
+    },
+    "p437": {
+      "team": null,
+      "cost": null,
+      "contractYr": null
+    },
+    "p456": {
+      "team": "Beesnuts",
+      "cost": 1.25,
+      "contractYr": 1
+    },
+    "p511": {
+      "team": "STUGOTS",
+      "cost": 0.25,
+      "contractYr": 1
+    },
+    "p535": {
+      "team": "Local #69",
+      "cost": 0.5,
+      "contractYr": 1
+    },
+    "p563": {
+      "team": "Bzitch",
+      "cost": 6.5,
+      "contractYr": 1
     }
   },
-  "watch": [],
+  "watch": [
+    "p431",
+    "p448",
+    "p56",
+    "p199",
+    "p295",
+    "p302",
+    "p432",
+    "p255",
+    "p203",
+    "p240",
+    "p331",
+    "p372",
+    "p165",
+    "p224",
+    "p393",
+    "p456",
+    "p183",
+    "p237",
+    "p93",
+    "p100",
+    "p115",
+    "p186",
+    "p102",
+    "p204",
+    "p235"
+  ],
   "myTeam": "PHILLY DILLY",
   "sliders": {
     "QB": {
@@ -94,7 +785,7 @@
     }
   },
   "marketScale": 1,
-  "marketFloor": 1,
+  "marketFloor": 1.25,
   "draftLog": [
     {
       "id": "p50",
@@ -1209,10 +1900,2109 @@
       "prevTeam": "PHILLY DILLY",
       "prevCost": 0.25,
       "action": "cut"
+    },
+    {
+      "id": "p46",
+      "name": "Jeremiyah Love",
+      "pos": "RB",
+      "team": "Dickey Did It",
+      "cost": 8,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p85",
+      "name": "Jadarian Price",
+      "pos": "RB",
+      "team": "PHILLY DILLY",
+      "cost": 7.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p150",
+      "name": "Carnell Tate",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 7,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p427",
+      "name": "Jonah Coleman",
+      "pos": "RB",
+      "team": "The Rookie",
+      "cost": 6.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p178",
+      "name": "Makai Lemon",
+      "pos": "WR",
+      "team": "Beesnuts",
+      "cost": 6,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p154",
+      "name": "Jordyn Tyson",
+      "pos": "WR",
+      "team": "PHILLY DILLY",
+      "cost": 5.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p434",
+      "name": "Nicholas Singleton",
+      "pos": "RB",
+      "team": "Captain Ron",
+      "cost": 5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p350",
+      "name": "Emmett Johnson",
+      "pos": "RB",
+      "team": "Captain Ron",
+      "cost": 4.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p214",
+      "name": "KC Concepcion",
+      "pos": "WR",
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p275",
+      "name": "Mike Washington Jr.",
+      "pos": "RB",
+      "team": "Mouth of Madden",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p289",
+      "name": "Ted Hurst III",
+      "pos": "WR",
+      "team": "Dickey Did It",
+      "cost": 3,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p277",
+      "name": "De'Zhaun Stribling",
+      "pos": "WR",
+      "team": "PHILLY DILLY",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p271",
+      "name": "Kaelon Black",
+      "pos": "RB",
+      "team": "Dickey Did It",
+      "cost": 2,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p232",
+      "name": "Denzel Boston",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 1.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p76",
+      "name": "Fernando Mendoza",
+      "pos": "QB",
+      "team": "Local #69",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p268",
+      "name": "Ja'Kobi Lane",
+      "pos": "WR",
+      "team": "Dirty Sanchez's",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "rookie"
+    },
+    {
+      "id": "p107",
+      "name": "Courtland Sutton",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Nobody Beats the Wiz",
+      "prevCost": 9.5,
+      "action": "cut"
+    },
+    {
+      "id": "p173",
+      "name": "Jordan Addison",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Nobody Beats the Wiz",
+      "prevCost": 6.25,
+      "action": "cut"
+    },
+    {
+      "id": "p129",
+      "name": "Sam LaPorta",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Nobody Beats the Wiz",
+      "prevCost": 8.5,
+      "action": "cut"
+    },
+    {
+      "id": "p142",
+      "name": "Cameron Dicker",
+      "pos": "K",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Nobody Beats the Wiz",
+      "prevCost": 2.75,
+      "action": "cut"
+    },
+    {
+      "id": "p151",
+      "name": "Isaiah Likely",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "STUGOTS",
+      "prevCost": 2.5,
+      "action": "cut"
+    },
+    {
+      "id": "p151",
+      "name": "Isaiah Likely",
+      "pos": "TE",
+      "team": "Nobody Beats the Wiz",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p129",
+      "name": "Sam LaPorta",
+      "pos": "TE",
+      "team": "STUGOTS",
+      "cost": 8.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p37",
+      "name": "Josh Jacobs",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "I'm Back",
+      "prevCost": 21.25,
+      "action": "cut"
+    },
+    {
+      "id": "p216",
+      "name": "Jerry Jeudy",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "I'm Back",
+      "prevCost": 5.75,
+      "action": "cut"
+    },
+    {
+      "id": "p239",
+      "name": "Oronde Gadsden II",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "I'm Back",
+      "prevCost": 3.5,
+      "action": "cut"
+    },
+    {
+      "id": "p433",
+      "name": "J.J. McCarthy",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Beesnuts",
+      "prevCost": 1,
+      "action": "cut"
+    },
+    {
+      "id": "p318",
+      "name": "Elic Ayomanor",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Beesnuts",
+      "prevCost": 1.5,
+      "action": "cut"
+    },
+    {
+      "id": "p286",
+      "name": "Theo Johnson",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Beesnuts",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p26",
+      "name": "Baker Mayfield",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "BRO's",
+      "prevCost": 6.75,
+      "action": "cut"
+    },
+    {
+      "id": "p507",
+      "name": "Mac Jones",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "BRO's",
+      "prevCost": 3.5,
+      "action": "cut"
+    },
+    {
+      "id": "p17",
+      "name": "Christian McCaffrey",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "BRO's",
+      "prevCost": 27.5,
+      "action": "cut"
+    },
+    {
+      "id": "p265",
+      "name": "Kayshon Boutte",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "BRO's",
+      "prevCost": 5.5,
+      "action": "cut"
+    },
+    {
+      "id": "p297",
+      "name": "Adonai Mitchell",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "BRO's",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p204",
+      "name": "Dalton Schultz",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "BRO's",
+      "prevCost": 6.75,
+      "action": "cut"
+    },
+    {
+      "id": "p551",
+      "name": "Trey Benson",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Captain Ron",
+      "prevCost": 6,
+      "action": "cut"
+    },
+    {
+      "id": "p283",
+      "name": "Isaac TeSlaa",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Captain Ron",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p535",
+      "name": "Kaleb Johnson",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Muck Fichigan",
+      "prevCost": 6.75,
+      "action": "cut"
+    },
+    {
+      "id": "p158",
+      "name": "Chris Godwin Jr.",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Muck Fichigan",
+      "prevCost": 8.25,
+      "action": "cut"
+    },
+    {
+      "id": "p315",
+      "name": "Marvin Mims Jr.",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Muck Fichigan",
+      "prevCost": 4,
+      "action": "cut"
+    },
+    {
+      "id": "p227",
+      "name": "Cade Otton",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Muck Fichigan",
+      "prevCost": 2.75,
+      "action": "cut"
+    },
+    {
+      "id": "p384",
+      "name": "Ollie Gordon II",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Bzitch",
+      "prevCost": 4,
+      "action": "cut"
+    },
+    {
+      "id": "s1",
+      "name": "Zach Ertz",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Bzitch",
+      "prevCost": 0.75,
+      "action": "cut"
+    },
+    {
+      "id": "p363",
+      "name": "Shedeur Sanders",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Goon Squad",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p199",
+      "name": "Zach Charbonnet",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Goon Squad",
+      "prevCost": 7.5,
+      "action": "cut"
+    },
+    {
+      "id": "p338",
+      "name": "Jaylin Noel",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Goon Squad",
+      "prevCost": 0.5,
+      "action": "cut"
+    },
+    {
+      "id": "p250",
+      "name": "Gunnar Helm",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Goon Squad",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p196",
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Johnny Kum Lately",
+      "prevCost": 4.5,
+      "action": "cut"
+    },
+    {
+      "id": "p295",
+      "name": "Tank Bigsby",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Johnny Kum Lately",
+      "prevCost": 4.25,
+      "action": "cut"
+    },
+    {
+      "id": "p263",
+      "name": "Troy Franklin",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Johnny Kum Lately",
+      "prevCost": 4.5,
+      "action": "cut"
+    },
+    {
+      "id": "p131",
+      "name": "Dallas Goedert",
+      "pos": "TE",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Johnny Kum Lately",
+      "prevCost": 6.75,
+      "action": "cut"
+    },
+    {
+      "id": "p481",
+      "name": "Justin Fields",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Mouth of Madden",
+      "prevCost": 3.5,
+      "action": "cut"
+    },
+    {
+      "id": "p254",
+      "name": "Travis Hunter",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Mouth of Madden",
+      "prevCost": 4.5,
+      "action": "cut"
+    },
+    {
+      "id": "p56",
+      "name": "Bryce Young",
+      "pos": "QB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "STUGOTS",
+      "prevCost": 8.5,
+      "action": "cut"
+    },
+    {
+      "id": "p103",
+      "name": "Rhamondre Stevenson",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "STUGOTS",
+      "prevCost": 8,
+      "action": "cut"
+    },
+    {
+      "id": "p298",
+      "name": "Emanuel Wilson",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "STUGOTS",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "s2",
+      "name": "Zonovan Knight",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "STUGOTS",
+      "prevCost": 4.5,
+      "action": "cut"
+    },
+    {
+      "id": "p103",
+      "name": "Rhamondre Stevenson",
+      "pos": "RB",
+      "team": "STUGOTS",
+      "cost": 8,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p107",
+      "name": "Courtland Sutton",
+      "pos": "WR",
+      "team": "STUGOTS",
+      "cost": 9.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p173",
+      "name": "Jordan Addison",
+      "pos": "WR",
+      "team": "STUGOTS",
+      "cost": 2.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p17",
+      "name": "Christian McCaffrey",
+      "pos": "RB",
+      "team": "I'm Back",
+      "cost": 24.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p0",
+      "name": "Josh Allen",
+      "pos": "QB",
+      "team": "Muck Fichigan",
+      "cost": 23,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p35",
+      "name": "James Cook III",
+      "pos": "RB",
+      "team": "STUGOTS",
+      "cost": 24.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p6",
+      "name": "Ja'Marr Chase",
+      "pos": "WR",
+      "team": "Beesnuts",
+      "cost": 24,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p16",
+      "name": "Amon-Ra St. Brown",
+      "pos": "WR",
+      "team": "Nobody Beats the Wiz",
+      "cost": 22.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p7",
+      "name": "Lamar Jackson",
+      "pos": "QB",
+      "team": "Bzitch",
+      "cost": 22.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p52",
+      "name": "Kenneth Walker III",
+      "pos": "RB",
+      "team": "PHILLY DILLY",
+      "cost": 23.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p8",
+      "name": "Joe Burrow",
+      "pos": "QB",
+      "team": "STUGOTS",
+      "cost": 16.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p39",
+      "name": "Saquon Barkley",
+      "pos": "RB",
+      "team": "I'm Back",
+      "cost": 24.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p9",
+      "name": "Jalen Hurts",
+      "pos": "QB",
+      "team": "Local #69",
+      "cost": 16,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p12",
+      "name": "Dak Prescott",
+      "pos": "QB",
+      "team": "Beesnuts",
+      "cost": 15,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p24",
+      "name": "Derrick Henry",
+      "pos": "RB",
+      "team": "The Rookie",
+      "cost": 20,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p51",
+      "name": "George Pickens",
+      "pos": "WR",
+      "team": "Dirty Sanchez's",
+      "cost": 16,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p73",
+      "name": "Minnesota Vikings",
+      "pos": "DST",
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p13",
+      "name": "Brock Purdy",
+      "pos": "QB",
+      "team": "BRO's",
+      "cost": 14,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p44",
+      "name": "Breece Hall",
+      "pos": "RB",
+      "team": "Johnny Kum Lately",
+      "cost": 17,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p43",
+      "name": "Justin Jefferson",
+      "pos": "WR",
+      "team": "Captain Ron",
+      "cost": 18,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p14",
+      "name": "Jared Goff",
+      "pos": "QB",
+      "team": "Captain Ron",
+      "cost": 14,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p38",
+      "name": "CeeDee Lamb",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 19,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p50",
+      "name": "A.J. Brown",
+      "pos": "WR",
+      "team": "Muck Fichigan",
+      "cost": 17.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p131",
+      "name": "Dallas Goedert",
+      "pos": "TE",
+      "team": "Mouth of Madden",
+      "cost": 8,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p27",
+      "name": "Drake London",
+      "pos": "WR",
+      "team": "PHILLY DILLY",
+      "cost": 16.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p89",
+      "name": "Tony Pollard",
+      "pos": "RB",
+      "team": "Dirty Sanchez's",
+      "cost": 13,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p65",
+      "name": "Garrett Wilson",
+      "pos": "WR",
+      "team": "Captain Ron",
+      "cost": 15,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p96",
+      "name": "David Montgomery",
+      "pos": "RB",
+      "team": "Johnny Kum Lately",
+      "cost": 15.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p180",
+      "name": "Dalton Kincaid",
+      "pos": "TE",
+      "team": "Beesnuts",
+      "cost": 6,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p20",
+      "name": "Patrick Mahomes II",
+      "pos": "QB",
+      "team": "Goon Squad",
+      "cost": 14,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p37",
+      "name": "Josh Jacobs",
+      "pos": "RB",
+      "team": "Beesnuts",
+      "cost": 8.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p53",
+      "name": "Chris Olave",
+      "pos": "WR",
+      "team": "Goon Squad",
+      "cost": 15.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p124",
+      "name": "Jason Myers",
+      "pos": "K",
+      "team": "Mouth of Madden",
+      "cost": 2,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p60",
+      "name": "Nico Collins",
+      "pos": "WR",
+      "team": "I'm Back",
+      "cost": 17.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p87",
+      "name": "Chuba Hubbard",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": 12,
+      "action": "cut"
+    },
+    {
+      "id": "p87",
+      "name": "Chuba Hubbard",
+      "pos": "RB",
+      "team": "Beesnuts",
+      "cost": 9.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p81",
+      "name": "Tee Higgins",
+      "pos": "WR",
+      "team": "Johnny Kum Lately",
+      "cost": 14.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p134",
+      "name": "Mike Evans",
+      "pos": "WR",
+      "team": "Dirty Sanchez's",
+      "cost": 10,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p26",
+      "name": "Baker Mayfield",
+      "pos": "QB",
+      "team": "The Rookie",
+      "cost": 12.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p19",
+      "name": "Justin Herbert",
+      "pos": "QB",
+      "team": "Nobody Beats the Wiz",
+      "cost": 10.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p78",
+      "name": "Cleveland Browns",
+      "pos": "DST",
+      "team": "I'm Back",
+      "cost": 2,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p243",
+      "name": "Chris Rodriguez Jr.",
+      "pos": "RB",
+      "team": "BRO's",
+      "cost": 8,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p113",
+      "name": "DJ Moore",
+      "pos": "WR",
+      "team": "Goon Squad",
+      "cost": 11.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p36",
+      "name": "Jordan Love",
+      "pos": "QB",
+      "team": "Dirty Sanchez's",
+      "cost": 8,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p346",
+      "name": "MarShawn Lloyd",
+      "pos": "RB",
+      "team": "Bzitch",
+      "cost": 11.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p71",
+      "name": "Los Angeles Rams",
+      "pos": "DST",
+      "team": "Goon Squad",
+      "cost": 7,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p28",
+      "name": "Sam Darnold",
+      "pos": "QB",
+      "team": "PHILLY DILLY",
+      "cost": 6.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p94",
+      "name": "Terry McLaurin",
+      "pos": "WR",
+      "team": "Muck Fichigan",
+      "cost": 11.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p99",
+      "name": "Deshaun Watson",
+      "pos": "QB",
+      "team": "I'm Back",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p23",
+      "name": "Daniel Jones",
+      "pos": "QB",
+      "team": "Johnny Kum Lately",
+      "cost": 6,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p54",
+      "name": "Geno Smith",
+      "pos": "QB",
+      "team": "I'm Back",
+      "cost": 3,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p127",
+      "name": "Aaron Jones Sr.",
+      "pos": "RB",
+      "team": "I'm Back",
+      "cost": 9.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p132",
+      "name": "DK Metcalf",
+      "pos": "WR",
+      "team": "BRO's",
+      "cost": 10,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p158",
+      "name": "Chris Godwin Jr.",
+      "pos": "WR",
+      "team": "BRO's",
+      "cost": 10,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p148",
+      "name": "Rachaad White",
+      "pos": "RB",
+      "team": "BRO's",
+      "cost": 10.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p74",
+      "name": "Philadelphia Eagles",
+      "pos": "DST",
+      "team": "Muck Fichigan",
+      "cost": 3.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p141",
+      "name": "Travis Kelce",
+      "pos": "TE",
+      "team": "Dickey Did It",
+      "cost": 5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p174",
+      "name": "Mark Andrews",
+      "pos": "TE",
+      "team": "I'm Back",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p90",
+      "name": "Davante Adams",
+      "pos": "WR",
+      "team": "Dickey Did It",
+      "cost": 11,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p241",
+      "name": "AJ Dillon",
+      "pos": "RB",
+      "team": "Dirty Sanchez's",
+      "cost": 6,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p167",
+      "name": "Harrison Butker",
+      "pos": "K",
+      "team": "Muck Fichigan",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p95",
+      "name": "Atlanta Falcons",
+      "pos": "DST",
+      "team": "Dickey Did It",
+      "cost": 2,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p56",
+      "name": "Bryce Young",
+      "pos": "QB",
+      "team": "Local #69",
+      "cost": 5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p63",
+      "name": "Aaron Rodgers",
+      "pos": "QB",
+      "team": "I'm Back",
+      "cost": 5.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p130",
+      "name": "Michael Pittman Jr.",
+      "pos": "WR",
+      "team": "Nobody Beats the Wiz",
+      "cost": 8.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p220",
+      "name": "Omar Cooper Jr.",
+      "pos": "WR",
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p432",
+      "name": "Kaytron Allen",
+      "pos": "RB",
+      "team": "Mouth of Madden",
+      "cost": 5.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p295",
+      "name": "Tank Bigsby",
+      "pos": "RB",
+      "team": "STUGOTS",
+      "cost": 5.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p142",
+      "name": "Cameron Dicker",
+      "pos": "K",
+      "team": "Beesnuts",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p196",
+      "name": "Tyjae Spears",
+      "pos": "RB",
+      "team": "Bzitch",
+      "cost": 5.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p246",
+      "name": "Samaje Perine",
+      "pos": "RB",
+      "team": "I'm Back",
+      "cost": 1.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p226",
+      "name": "Jauan Jennings",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p83",
+      "name": "Los Angeles Chargers",
+      "pos": "DST",
+      "team": "BRO's",
+      "cost": 3,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p77",
+      "name": "Baltimore Ravens",
+      "pos": "DST",
+      "team": "Goon Squad",
+      "cost": 2.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p249",
+      "name": "Brian Robinson Jr.",
+      "pos": "RB",
+      "team": "Nobody Beats the Wiz",
+      "cost": 7.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p171",
+      "name": "Jayden Reed",
+      "pos": "WR",
+      "team": "I'm Back",
+      "cost": 7,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p199",
+      "name": "Zach Charbonnet",
+      "pos": "RB",
+      "team": "Goon Squad",
+      "cost": 8.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p203",
+      "name": "Kenyon Sadiq",
+      "pos": "TE",
+      "team": "Bzitch",
+      "cost": 4,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p207",
+      "name": "Jalen Coker",
+      "pos": "WR",
+      "team": "Muck Fichigan",
+      "cost": 6.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p238",
+      "name": "Cooper Kupp",
+      "pos": "WR",
+      "team": "Johnny Kum Lately",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p79",
+      "name": "Detroit Lions",
+      "pos": "DST",
+      "team": "Muck Fichigan",
+      "cost": 2.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p431",
+      "name": "Ty Simpson",
+      "pos": "QB",
+      "team": "Mouth of Madden",
+      "cost": 4,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p255",
+      "name": "Chris Bell",
+      "pos": "WR",
+      "team": "Muck Fichigan",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p231",
+      "name": "Tyrone Tracy Jr.",
+      "pos": "RB",
+      "team": "Dirty Sanchez's",
+      "cost": 4.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p257",
+      "name": "Malik Washington",
+      "pos": "WR",
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p265",
+      "name": "Kayshon Boutte",
+      "pos": "WR",
+      "team": "Muck Fichigan",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p155",
+      "name": "Nick Folk",
+      "pos": "K",
+      "team": "I'm Back",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p302",
+      "name": "Adam Randall",
+      "pos": "RB",
+      "team": "The Rookie",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p80",
+      "name": "New England Patriots",
+      "pos": "DST",
+      "team": "Dickey Did It",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p146",
+      "name": "George Kittle",
+      "pos": "TE",
+      "team": "Dirty Sanchez's",
+      "cost": 4.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p230",
+      "name": "Pat Freiermuth",
+      "pos": "TE",
+      "team": "Muck Fichigan",
+      "cost": 1.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p149",
+      "name": "Jake Bates",
+      "pos": "K",
+      "team": "Bzitch",
+      "cost": 1.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p212",
+      "name": "T.J. Hockenson",
+      "pos": "TE",
+      "team": "BRO's",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p224",
+      "name": "Alvin Kamara",
+      "pos": "RB",
+      "team": "Dirty Sanchez's",
+      "cost": 3.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p563",
+      "name": "Britain Covey",
+      "pos": "WR",
+      "team": "Bzitch",
+      "cost": 6.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p260",
+      "name": "Spencer Shrader",
+      "pos": "K",
+      "team": "Local #69",
+      "cost": 1.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p165",
+      "name": "Khalil Shakir",
+      "pos": "WR",
+      "team": "Captain Ron",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p144",
+      "name": "Harrison Mevis",
+      "pos": "K",
+      "team": "The Rookie",
+      "cost": 1.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p160",
+      "name": "Cairo Santos",
+      "pos": "K",
+      "team": "BRO's",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p205",
+      "name": "Isiah Pacheco",
+      "pos": "RB",
+      "team": "Dirty Sanchez's",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p456",
+      "name": "Cyrus Allen",
+      "pos": "WR",
+      "team": "Beesnuts",
+      "cost": 1.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p115",
+      "name": "Buffalo Bills",
+      "pos": "DST",
+      "team": "The Rookie",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p221",
+      "name": "Tre Tucker",
+      "pos": "WR",
+      "team": "BRO's",
+      "cost": 3,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p119",
+      "name": "Cincinnati Bengals",
+      "pos": "DST",
+      "team": "Local #69",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p102",
+      "name": "Jacksonville Jaguars",
+      "pos": "DST",
+      "team": "Beesnuts",
+      "cost": 2,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p416",
+      "name": "Demond Claiborne",
+      "pos": "RB",
+      "team": "Dickey Did It",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p535",
+      "name": "Kaleb Johnson",
+      "pos": "RB",
+      "team": "Local #69",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p183",
+      "name": "Xavier Worthy",
+      "pos": "WR",
+      "team": "Johnny Kum Lately",
+      "cost": 1.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p233",
+      "name": "Greg Dulcich",
+      "pos": "TE",
+      "team": "Local #69",
+      "cost": 1.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p100",
+      "name": "Green Bay Packers",
+      "pos": "DST",
+      "team": "Captain Ron",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p86",
+      "name": "Tua Tagovailoa",
+      "pos": "QB",
+      "team": "STUGOTS",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p161",
+      "name": "Eddy Pineiro",
+      "pos": "K",
+      "team": "Johnny Kum Lately",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p172",
+      "name": "Cam Little",
+      "pos": "K",
+      "team": "Captain Ron",
+      "cost": 1.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p264",
+      "name": "Caleb Douglas",
+      "pos": "WR",
+      "team": "The Rookie",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p248",
+      "name": "Evan Engram",
+      "pos": "TE",
+      "team": "Beesnuts",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p429",
+      "name": "Najee Harris",
+      "pos": "RB",
+      "team": "BRO's",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p204",
+      "name": "Dalton Schultz",
+      "pos": "TE",
+      "team": "Captain Ron",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p117",
+      "name": "Chicago Bears",
+      "pos": "DST",
+      "team": "PHILLY DILLY",
+      "cost": 0.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p418",
+      "name": "Seth McGowan",
+      "pos": "RB",
+      "team": "Goon Squad",
+      "cost": 5.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p329",
+      "name": "Keaton Mitchell",
+      "pos": "RB",
+      "team": "Local #69",
+      "cost": 1,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p164",
+      "name": "Tyler Loop",
+      "pos": "K",
+      "team": "PHILLY DILLY",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p177",
+      "name": "Wil Lutz",
+      "pos": "K",
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p287",
+      "name": "Malik Davis",
+      "pos": "RB",
+      "team": "STUGOTS",
+      "cost": 0.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p253",
+      "name": "Jordan James",
+      "pos": "RB",
+      "team": "Beesnuts",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p363",
+      "name": "Shedeur Sanders",
+      "pos": "QB",
+      "team": "BRO's",
+      "cost": 2.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p175",
+      "name": "Washington Commanders",
+      "pos": "DST",
+      "team": "Bzitch",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p376",
+      "name": "Kirk Cousins",
+      "pos": "QB",
+      "team": "Goon Squad",
+      "cost": 1.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p235",
+      "name": "Antonio Williams",
+      "pos": "WR",
+      "team": "PHILLY DILLY",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p93",
+      "name": "Kansas City Chiefs",
+      "pos": "DST",
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p169",
+      "name": "Evan McPherson",
+      "pos": "K",
+      "team": "STUGOTS",
+      "cost": 0.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p182",
+      "name": "Trey Smack",
+      "pos": "K",
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p393",
+      "name": "Malachi Fields",
+      "pos": "WR",
+      "team": "Nobody Beats the Wiz",
+      "cost": 2.5,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p338",
+      "name": "Jaylin Noel",
+      "pos": "WR",
+      "team": "Goon Squad",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p187",
+      "name": "Tyler Bass",
+      "pos": "K",
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p237",
+      "name": "Justice Hill",
+      "pos": "RB",
+      "team": "PHILLY DILLY",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p511",
+      "name": "Kyle Allen",
+      "pos": "QB",
+      "team": "STUGOTS",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p239",
+      "name": "Oronde Gadsden II",
+      "pos": "TE",
+      "team": "Nobody Beats the Wiz",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p300",
+      "name": "Dontayvion Wicks",
+      "pos": "WR",
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p297",
+      "name": "Adonai Mitchell",
+      "pos": "WR",
+      "team": "BRO's",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p355",
+      "name": "Eli Raridon",
+      "pos": "TE",
+      "team": "Goon Squad",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p98",
+      "name": "New Orleans Saints",
+      "pos": "DST",
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p382",
+      "name": "Sean Tucker",
+      "pos": "RB",
+      "team": "Johnny Kum Lately",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p39",
+      "name": "Saquon Barkley",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "I'm Back",
+      "prevCost": 24.75,
+      "action": "cut"
+    },
+    {
+      "id": "p39",
+      "name": "Saquon Barkley",
+      "pos": "RB",
+      "team": "Bzitch",
+      "cost": 24.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p437",
+      "name": "Devin Neal",
+      "pos": "RB",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p184",
+      "name": "Ricky Pearsall",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": 2.75,
+      "action": "cut"
+    },
+    {
+      "id": "p267",
+      "name": "Tory Horton",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p305",
+      "name": "Pat Bryant",
+      "pos": "WR",
+      "team": null,
+      "cost": null,
+      "prevTeam": "Dirty Sanchez's",
+      "prevCost": 2.25,
+      "action": "cut"
+    },
+    {
+      "id": "p162",
+      "name": "Chase McLaughlin",
+      "pos": "K",
+      "team": "Dirty Sanchez's",
+      "cost": 0.75,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
+    },
+    {
+      "id": "p357",
+      "name": "LeQuint Allen Jr.",
+      "pos": "RB",
+      "team": "STUGOTS",
+      "cost": 0.25,
+      "prevTeam": null,
+      "prevCost": null,
+      "action": "draft"
     }
   ],
-  "rookiePicks": {},
+  "rookiePicks": {
+    "1": "p46",
+    "2": "p85",
+    "3": "p150",
+    "4": "p427",
+    "5": "p178",
+    "6": "p154",
+    "7": "p434",
+    "8": "p350",
+    "9": "p214",
+    "10": "p275",
+    "11": "p289",
+    "12": "p277",
+    "13": "p271",
+    "14": "p232",
+    "15": "p76",
+    "16": "p268"
+  },
   "adjusts": {
+    "p52": {
+      "ppg": 15.08,
+      "season": 256.4,
+      "stats": {
+        "ruAtt": 265,
+        "ruYd": 1250,
+        "ruTD": 10,
+        "rec": 46.6,
+        "recYd": 358.7,
+        "recTD": 1.5
+      }
+    },
     "p85": {
       "ppg": 11.52,
       "season": 195.9,
@@ -1260,5 +4050,5 @@
     }
   },
   "draftActive": false,
-  "draftStartIdx": null
+  "draftStartIdx": 171
 }
