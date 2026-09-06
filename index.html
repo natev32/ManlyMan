@@ -1234,6 +1234,15 @@ function _fitAsset(){if(_assetFit)return _assetFit;var xs=[],ys=[];MASTER.forEac
 function computedAsset(p){if(p.season==null)return null;var f=_fitAsset();return Math.max(1,Math.min(99,Math.round(f.m*_rawAsset(p)+f.b)));}
 function assetOf(p){return p.assetScore!=null?p.assetScore:computedAsset(p);}
 
+
+function _yrCtrl(p){
+  if(!p.team)return '';
+  const cur=p.contractYr||1;
+  let opts='';
+  for(let y=1;y<=CONTRACT_MAX_YR;y++)opts+=`<option value="${y}"${y===cur?' selected':''}>Yr${y}</option>`;
+  return `<select class="yrsel" data-yrid="${p.id}" title="Contract year">${opts}</select>`;
+}
+
 function _tagCtrl(p){
   if(!p.team||p.contractYr!==CONTRACT_MAX_YR)return '';
   const cur=p.franchiseTag?'F':(p.transitionTag?'T':'');
@@ -1251,7 +1260,7 @@ function renderBoard(){
     <td class="l"><span class="pos-tag ${p.pos}">${p.pos}</span></td>
     <td class="l" style="color:var(--ink-dim);font-weight:600">${p.team||'\u2014'}</td>
     <td class="mono" style="color:var(--ink-dim)">${fmt(p.ppg,1)}</td>
-    <td class="mono">${p.cost==null?'\u2014':'$'+fmt(p.cost,2)}${_tagCtrl(p)?('<br>'+_tagCtrl(p)):''}</td>
+    <td class="mono">${p.cost==null?'\u2014':'$'+fmt(p.cost,2)}${p.team?('<br>'+_yrCtrl(p)):''}${_tagCtrl(p)?(' '+_tagCtrl(p)):''}</td>
     <td><span class="asset" style="color:${aC};border:1px solid ${aC}55" title="Asset value 1\u2013100${_aE?' (estimated from value model)':''}">${aS==null?'\u2014':(_aE?'~'+aS:aS)}</span></td><td class="mono" style="color:var(--green-dim);font-weight:600" title="multi-year surplus over remaining contract years">${p.keeperVal==null?'\u2014':'$'+fmt(p.keeperVal,0)}</td></tr>`;}).join('');
 }
 document.querySelectorAll('#v-draft .pos-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('#v-draft .pos-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');posFilter=b.dataset.pos;renderBoard();});
@@ -1259,6 +1268,14 @@ $('#q').oninput=e=>{query=e.target.value;renderBoard();};
 document.querySelectorAll('#board thead th[data-s]').forEach(th=>th.onclick=()=>{const k=th.dataset.s;if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=(k==='name')?1:-1;}document.querySelectorAll('#board thead th .ar').forEach(a=>a.remove());const ar=document.createElement('span');ar.className='ar';ar.textContent=sortDir<0?' \u25BC':' \u25B2';th.appendChild(ar);renderBoard();});
 $('#rows').addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b)sqAdd(decodeURIComponent(b.dataset.add));});
 $('#rows').addEventListener('change',async e=>{
+  const yrSel=e.target.closest('[data-yrid]');
+  if(yrSel){
+    const m=mById[yrSel.dataset.yrid];if(!m)return;
+    m.contractYr=+yrSel.value;
+    if(m.contractYr!==CONTRACT_MAX_YR){ m.transitionTag=false; m.franchiseTag=false; m.transitionPrice=null; }
+    saveSession();renderBoard();if(typeof renderStartDraftBar==='function')renderStartDraftBar();
+    return;
+  }
   const sel=e.target.closest('[data-tagid]');if(!sel)return;
   const m=mById[sel.dataset.tagid];if(!m)return;
   const val=sel.value;
