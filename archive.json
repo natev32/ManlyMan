@@ -1,7 +1,7 @@
 {
   "kind": "mmfl_archive",
   "schemaVersion": 1,
-  "updatedAt": "2026-09-06T20:34:07.584Z",
+  "updatedAt": "2026-09-07T17:09:16.228Z",
   "players": {
     "p6": {
       "id": "p6",
@@ -6535,5 +6535,5 @@
       "manualSubmit": true
     }
   },
-  "remoteUpdatedAt": "2026-09-06T14:12:21.991Z"
+  "remoteUpdatedAt": "2026-09-06T20:34:07.584Z"
 }
